@@ -9,7 +9,7 @@ from config import VERTEX_PROJECT_ID, VERTEX_LOCATION, LLM_MODEL
 def rerank(query: str, docs: list[Document], top_k: int = 25, callbacks: list = None, tags: list = None) -> list[Document]:
     """
     Rerank retrieved chunks using Gemini 2.5 via Vertex AI.
-    This replaces the local cross-encoder with a smarter LLM-based evaluator.
+    Optimized to handle large contexts by capping input and using previews.
     """
     if not docs:
         return docs
@@ -23,19 +23,30 @@ def rerank(query: str, docs: list[Document], top_k: int = 25, callbacks: list = 
         timeout=60
     )
     
-    # Format the documents into a numbered list
-    docs_text = "\n\n".join([f"[{i}] {d.page_content}" for i, d in enumerate(docs)])
+    # Safeguard: Cap the number of chunks we send to Gemini for reranking.
+    # With 2000-char previews, 100 chunks is ~200k chars (~50k tokens),
+    # which is well within Vertex AI limits.
+    max_input_docs = 100
+    input_docs = docs[:max_input_docs]
+    
+    # Format the documents into a numbered list, with truncated previews to save tokens
+    # and stay within request size limits.
+    docs_text = ""
+    for i, d in enumerate(input_docs):
+        # Use first 2000 chars for reranking decision - usually enough to see context
+        preview = d.page_content[:2000].replace("\n", " ")
+        docs_text += f"[{i}] {preview}...\n\n"
     
     prompt = ChatPromptTemplate.from_messages([
-        ("system", "Du bist ein Experte für Informationsabruf. Deine Aufgabe ist es, Textabschnitte nach ihrer Relevanz für eine gegebene Suchanfrage zu bewerten."),
-        ("human", """Bewerte die folgenden Textabschnitte basierend darauf, wie gut sie die Suchanfrage beantworten.
+        ("system", "Du bist ein Experte für Informationsabruf. Deine Aufgabe ist es, Textabschnitte nach ihrer Relevanz für eine gegebene Suchanfrage zu bewerten. Nutze die Textausschnitte, um zu entscheiden, welche Abschnitte die Antwort enthalten."),
+        ("human", f"""Bewerte die folgenden Textabschnitte basierend darauf, wie gut sie die Suchanfrage beantworten.
         
-Suchanfrage: {query}
+Suchanfrage: {{query}}
 
 Textabschnitte:
 {docs_text}
 
-Gib AUSSCHLIESSLICH ein JSON-Array mit den Indizes der {top_k} relevantesten Abschnitte zurück, sortiert nach absteigender Relevanz.
+Gib AUSSCHLIESSLICH ein JSON-Array mit den Indizes der {{top_k}} relevantesten Abschnitte zurück, sortiert nach absteigender Relevanz.
 Beispiel: [12, 4, 0, 45, 8]""")
     ])
     
@@ -48,33 +59,31 @@ Beispiel: [12, 4, 0, 45, 8]""")
         try:
             response = chain.invoke({
                 "query": query,
-                "docs_text": docs_text,
-                "top_k": min(top_k, len(docs))
+                "top_k": min(top_k, len(input_docs))
             }, config={"callbacks": callbacks or [], "tags": tags or []})
             
             import re
             
-            # Safely extract the JSON array using regex in case the LLM adds conversational text
+            # Safely extract the JSON array using regex
             content = response.content.strip()
             match = re.search(r'\[\s*\d+(?:\s*,\s*\d+)*\s*\]', content)
             if match:
                 ranked_indices = json.loads(match.group(0))
             else:
-                # Fallback if regex fails, maybe it's just pure JSON
                 cleaned = content.replace("```json", "").replace("```", "").strip()
                 ranked_indices = json.loads(cleaned)
             
-            # Return the documents in the order specified by Gemini
+            # Return the full documents in the order specified by Gemini
             ranked_docs = []
             for idx in ranked_indices:
-                if isinstance(idx, int) and 0 <= idx < len(docs):
-                    ranked_docs.append(docs[idx])
+                if isinstance(idx, int) and 0 <= idx < len(input_docs):
+                    ranked_docs.append(input_docs[idx])
                     
             # If Gemini didn't return enough, pad with the original RRF order
             if len(ranked_docs) < min(top_k, len(docs)):
-                seen = set(ranked_indices)
-                for i, doc in enumerate(docs):
-                    if i not in seen:
+                seen_ids = {id(d) for d in ranked_docs}
+                for doc in docs:
+                    if id(doc) not in seen_ids:
                         ranked_docs.append(doc)
                         if len(ranked_docs) >= min(top_k, len(docs)):
                             break
