@@ -17,7 +17,13 @@ docker compose up -d
 ```
 Access the dashboard at `http://localhost:3000`.
 
-### 2. Environment
+### 2. Dependencies
+Install and sync dependencies:
+```bash
+uv sync
+```
+
+### 3. Environment
 Create a `.env` file with your credentials:
 ```bash
 GOOGLE_APPLICATION_CREDENTIALS="credentials.json"
