@@ -1,0 +1,333 @@
+{
+  "auftraggeber": "BG-Phoenics GmbH\nVergabestelle\nTiergartenstr. 39\n30559 Hannover",
+  "projektbeschreibung": "Die BG-Phoenics GmbH (auch 'Auftraggeber\" oder 'BGP\" genannt) ist IT-Dienstleister für Berufsgenossenschaften, andere Sozialversicherungsträger, deren Einrichtungen und ähnliche Organisationen. Gesellschafter des Aufraggebers sind die Berufsgenossenschaft der Bauwirtschaft (BG BAU) mit Sitz in Berlin, die Berufsgenossenschaft Nahrungsmittel und Gastgewerbe (BGN) mit Sitz in Mannheim und die Berufsgenossenschaft Rohstoffe und chemische Industrie (BG RCI) mit Sitz in Heidelberg.\n\nAusschreibungsgegenstand sind Unterstützungsleistungen im Geschäftsbereich Projektsteuerung (im Weiteren auch PS genannt). Der Geschäftsbereich PS stellt Ihren Kunden eine umfangreiche Auswahl an verschiedenen Leistungen zur Verfügung. Der Leistungsbereich 'Projektmanagement\" in dem Geschäftsbereich (PS) führt Projekte für seine Kunden die BG BAU, BGN, BG RCI sowie weitere Kunden im Sozialversicherungsumfeld und in den eigenen Geschäftsbereichen durch. Es werden im Projektmanagementumfeld diverse Kunden- und BGP-Projekte erwartet. Bei den möglichen Projekten handelt es sich unter anderem um verschiedenartige IT-Infrastrukturprojekte, aber auch um Projekte zur Softwareeinführung, Softwareentwicklung und im Umfeld Digitalisierung, Prozessautomatisierung und KI. Ein Bereich der Softwareentwicklung ist die durch BGP entwickelte Branchenlösung 'phoenics.\". Diese workflow-gesteuerte und geschäftsprozessorientierte Anwendung ergibt ein hochintegriertes Gesamtsystem, das alle Fachanwendungen der gesetzlichen Unfallversicherungsträger in einer Lösung verbindet. Für die Projekte im Umfeld der Anwendungssoftware phoenics. wird das SAFe-Framework verwendet. Außerdem gelten die ITIL Standards der BG-Phoenics GmbH.\n\nRahmenvertrag Unterstützungsleistungen im Geschäftsbereich Projektmanagement(PS) Los 1-3\nGegenstand der Vergabe sind Unterstützungsleistungen im Geschäftsbereich Projektmanagement (PS). Ausgeschrieben werden drei Lose, innerhalb derer verschiedene Rollen zusammengefasst sind: Los 1: Projektmanager (3 Mitarbeiter pro Jahr) Los 2: Projektmanager Senior (9 Mitarbeiter pro Jahr) Los 3: Projektassistenz (3 Mitarbeiter Pro Jahr) Die Laufzeit des Rahmenvertrags beträgt 36 Monate mit einer Möglichkeit zur Vertragsverlängerung um jeweils weitere 12 Monate bis zu einer maximalen Laufzeit von 48 Monaten. Mindestabnahmen werden nicht zugesagt.\n\nDer Ort der Leistungserbringung ist überwiegend remote geplant. Der Projektstandort ist München. Nach Absprache zwischen dem Auftraggeber und dem Auftragnehmer können auch Leistungen an anderen Standorten der BGP und dessen Kunden innerhalb Deutschlands an den Standorten des Kunden erbracht werden. Details dazu werden innerhalb der Leistungsbeschreibungen, die in den Miniwettbewerben übermittelt werden, definiert.\n\nSchritt 1: Abschluss von Rahmenverträgen\nDie Vergabestelle führt ein offenes Verfahren durch. Ausgeschrieben wird zunächst der Abschluss der Rahmenverträge mit mehreren Wirtschaftsteilnehmern, die jeweils losweise abgeschlossen werden. Zugelassen werden pro Los alle Wirtschaftsteilnehmer, die ihre Eignung nachgewiesen haben.\nBewertet wird jeweils anhand der eingereichten Unterlagen, insbesondere der ausgefüllten Templates, Lebensläufe (CV), Projektreferenzen und Zertifikate/Schulungsnachweise. Die Profile, die aufgrund des Lebenslaufes und der nachgewiesenen Projektreferenzen Leistungen nachweisen, die uneingeschränkt mit der jeweils ausgeschriebenen Aufgabenstellung vergleichbar sind, erhalten die Maximalpunktzahl. Ist eine Projektreferenz nur eingeschränkt vergleichbar, etwa weil es sich nicht um eine vergleichbar komplexe Umgebung handelt, werden entsprechend weniger Punkte vergeben. Das Punktesystem ist in der jeweiligen Bewertungsmatrix pro Los zusammengefasst und als Anlage den Vergabeunterlagen beigefügt. Mindestens ein Profil muss den geforderten Anforderungen entsprechen und eine Mindestpunktzahl von 60 Punkten vorweisen. Wird die Mindestpunktzahl von 60 Punkten nicht erreicht ist das Profil nicht wertbar und führt zum Ausschluss.\n\nSchritt 2: Miniwettbewerb\nNach Abschluss der Rahmenvereinbarung werden Miniwettbewerbe durchgeführt, die jeweils mit einer Angebotsfrist von ein bis zwei Wochen erfolgen. Innerhalb der Miniwettbewerbe wird das Datum, innerhalb dessen die Leistung zu erbringen ist, definiert.",
+  "abgabetermin": "Angebotsfrist 16.08.2024 17:00:00\nBindefrist 31.12.2024\nVersand Vorabinformation 11.09.2024\n\nBeginn 01.10.2024\nEnde 30.09.2028",
+  "unterlagenliste_fuer_das_angebot": [
+    "ERKLÄRUNG DES BIETERS / DER BIETERGEMEINSCHAFT ZUM NICHTVORLIEGEN VON AUSSCHLUSSGRÜNDEN",
+    "VERPFLICHTUNGSERKLÄRUNG VON EINGEBUNDENEN DRITTUNTERNEHMEN",
+    "ERKLÄRUNG DER BIETERGEMEINSCHAFT",
+    "EIGENERKLÄRUNG DES BIETERS / BEWERBERS / DER BIETER-, BEWERBERGEMEINSCHAFT GEM. ARTIKEL 5 k) DER VERORDNUNG 833/2014 (EU) IN DER FASSUNG DES ART. 1 ZIFF. 23 DER VERORDNUNG (EU) 2022/576 DES RATES VOM 08. APRIL 2022",
+    "Eignung zur Berufsausübung: Angaben zum Firmenprofil, Eigenerklärung über Ausschlussgründe, Handelsregisterauszug, Haftpflichtversicherung",
+    "Wirtschaftliche und finanzielle Leistungsfähigkeit: Vorlage von Bilanzen oder Bilanzauszügen für die letzten 3 Geschäftsjahre; Gesamtumsätze 2021-2023; Umsatz im Bereich der Leistungsbeschreibung 2021-2023"
+  ],
+  "leistungsbeschreibung": {
+    "geschaetzter_wert_ohne_mwst_euro": 14400000,
+    "lose": [
+      {
+        "los": 1,
+        "bezeichnung": "Unterstützungsleistungen in der Rolle eines Projektmanagers",
+        "mitarbeiter_anzahl": 3,
+        "stunden_pro_mitarbeiter_pro_jahr": 1600
+      },
+      {
+        "los": 2,
+        "bezeichnung": "Projektmanager Senior",
+        "mitarbeiter_anzahl": 9,
+        "stunden_pro_mitarbeiter_pro_jahr": 1600
+      },
+      {
+        "los": 3,
+        "bezeichnung": "Projektassistenz",
+        "mitarbeiter_anzahl": 3,
+        "stunden_pro_mitarbeiter_pro_jahr": 1600
+      }
+    ]
+  },
+  "personalprofil": {
+    "los_1_projektmanager": {
+      "anzahl_profile": 3,
+      "erforderliche_kenntnisse": [
+        "Mindestens fünfjährige Projektmanagement-Kenntnisse",
+        "Zertifizierung nach IPMA (Level D) oder vergleichbar (z.B. Prince2 Foundation oder Prince2 Agile Foundation)",
+        "Mindestens dreijährige Projektmanagementtätigkeiten in IT-Projekten",
+        "Mindestens fünfjährige Erfahrungen im eigenständigen Aufsetzen und Durchführen eines Projektcontrollings",
+        "Mindestens fünfjährige Erfahrungen in der eigenständigen Durchführung von Projektreporting",
+        "Mindestens dreijährige Fachexpertise beim Thema gesetzliche Unfallversicherungen",
+        "Mindestens fünfjährige Erfahrungen in der Anwendung von PM-Werkzeugen (MS-Project, MS-VISIO, MS-Office, Confluence, Jira)",
+        "Mindestens dreijährige Kenntnisse in skalierten agilen Frameworks (bevorzugt SAFe)"
+      ],
+      "erfahrungen": [
+        "Mindestens dreijährige Projektmanagementerfahrung in verantwortlicher Projektleitungsfunktion in einem PMO eines IT-Dienstleisters",
+        "Mindestens dreijährige Erfahrung als gesamtverantwortlicher Projektleiter im Sozialversicherungsumfeld (bevorzugt Berufsgenossenschaften)",
+        "Mindestens fünfjährige Erfahrungen in einem Arbeitsumfeld mit IT-Servicemanagement nach ITIL",
+        "Mindestens fünfjährige Erfahrungen in der Durchführung von Projekten nach standardisiertem Vorgehensmodell (z.B. IPMA/GPM, Prince2)",
+        "Mindestens fünfjährige Erfahrung in der Führung großer und heterogen zusammengesetzter Teams",
+        "Mindestens fünfjährige Präsentations- und Moderationserfahrungen vor Fachpublikum und Projektgremien",
+        "Mindestens dreijährige Beratungskompetenz"
+      ]
+    },
+    "los_2_projektmanager_senior": {
+      "anzahl_profile": 9,
+      "erforderliche_kenntnisse": [
+        "Mindestens achtjährige Projektmanagement-Kenntnisse",
+        "Zertifizierung nach IPMA (mind. Level D) oder vergleichbar",
+        "Mindestens achtjährige Projektmanagementtätigkeiten in IT-Projekten als gesamtverantwortlicher Projektleiter",
+        "Mindestens achtjährige Erfahrungen im Programm-Management",
+        "Mindestens achtjährige Kenntnisse in der eigenständigen Durchführung von Projektreporting und -controlling",
+        "Mindestens dreijährige Fachexpertise beim Thema gesetzliche Unfallversicherungen",
+        "Mindestens achtjährige Kenntnisse in der Anwendung von PM-Werkzeugen (MS-Project, MS-VISIO, MS-Office, Confluence, Jira)",
+        "Mindestens achtjährige Kenntnisse in skalierten agilen Frameworks (bevorzugt SAFe)"
+      ],
+      "erfahrungen": [
+        "Mindestens achtjährige Programm- und/oder Projektmanagementerfahrung in verantwortlicher Projektleitungsfunktion",
+        "Mindestens dreijährige Erfahrung als gesamtverantwortlicher Projektleiter im Sozialversicherungsumfeld (bevorzugt Berufsgenossenschaften)",
+        "Mindestens achtjährige Erfahrungen in einem Arbeitsumfeld mit IT-Servicemanagement nach ITIL",
+        "Mindestens achtjährige Erfahrungen in der Durchführung von Projekten nach standardisiertem Vorgehensmodell (z.B. IPMA/GPM)",
+        "Mindestens achtjährige Erfahrung in der Führung großer und heterogen zusammengesetzter Teams",
+        "Mindestens achtjährige Präsentations- und Moderationserfahrungen vor Fachpublikum, Projektgremien und gehobenem Management",
+        "Mindestens fünfjährige Beratungskompetenz im methodischen Projektmanagementumfeld"
+      ]
+    },
+    "los_3_projektassistenz": {
+      "anzahl_profile": 3,
+      "erforderliche_kenntnisse": [
+        "Mindestens zweijährige Projekterfahrung als Assistenz in IT-Projekten (idealerweise nach IPMA-Standard)",
+        "Mindestens zweijährige Kenntnisse bei projektunterstützenden Aufgaben (Projektplanungsdokumente, Protokoll, Terminkoordination)",
+        "Mindestens zweijährige Kenntnisse in der Unterstützung des Projektcontrollings",
+        "Mindestens zweijährige Kenntnisse in der Durchführung von Projektreporting",
+        "Mindestens zweijährige Kenntnisse in PM-Werkzeugen (MS-Project, MS-VISIO, MS-Office)",
+        "Mindestens zweijährige Kenntnisse in der Anwendung von JIRA",
+        "Mindestens zweijährige Kenntnisse in der Anwendung von Confluence"
+      ],
+      "erfahrungen": [
+        "Mindestens zweijährige Projekterfahrung im PMO eines IT-Dienstleisters",
+        "Mindestens zweijährige Projekterfahrung im Sozialversicherungsumfeld (bevorzugt Berufsgenossenschaften)",
+        "Mindestens zweijährige Erfahrungen in einem Arbeitsumfeld mit IT-Servicemanagement nach ITIL",
+        "Mindestens zweijährige Erfahrungen im visuellen und inhaltlichen Vorbereiten von Projektterminen",
+        "Mindestens zweijährige Präsentations- und Moderationserfahrungen",
+        "Mindestens zweijährige Erfahrung in der Zusammenarbeit in großen und heterogen zusammengesetzten Teams"
+      ]
+    }
+  },
+  "unternehmensreferenzen": "",
+  "zuschlagskriterien": {
+    "gesamtpreis_gewichtung_prozent": 40,
+    "qualitaet_gewichtung_prozent": 60,
+    "los_1_bewertungsmatrix": {
+      "methodische_kenntnisse": [
+        {
+          "kriterium": "Mind. 5 Jahre Projektmanagement-Kenntnisse",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Zertifizierung nach IPMA Level D oder vergleichbar",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 3 Jahre Projektmanagementtätigkeiten in IT-Projekten",
+          "punkte": 2.5
+        },
+        {
+          "kriterium": "Mind. 5 Jahre Erfahrungen im Aufsetzen und Durchführen von Projektcontrolling",
+          "punkte": 2.5
+        },
+        {
+          "kriterium": "Mind. 5 Jahre Erfahrungen in der Durchführung von Projektreporting",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 3 Jahre Fachexpertise gesetzliche Unfallversicherungen",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 5 Jahre Erfahrungen in PM-Werkzeugen (MS-Project, VISIO, Office, Confluence, Jira)",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 3 Jahre Kenntnisse in skalierten agilen Frameworks (bevorzugt SAFe)",
+          "punkte": 5
+        }
+      ],
+      "max_punkte_methodische_kenntnisse": 35,
+      "erfahrungen": [
+        {
+          "kriterium": "Mind. 3 Jahre PM-Erfahrung in verantwortlicher Projektleitungsfunktion im PMO eines IT-Dienstleisters",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 3 Jahre Erfahrung als gesamtverantwortlicher Projektleiter im Sozialversicherungsumfeld",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 5 Jahre Erfahrungen IT-Servicemanagement nach ITIL",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 5 Jahre Erfahrungen in Projekten nach standardisiertem Vorgehensmodell (IPMA/GPM, Prince2)",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 5 Jahre Erfahrung in der Führung großer und heterogener Teams",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 5 Jahre Präsentations- und Moderationserfahrungen",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 3 Jahre Beratungskompetenz im methodischen Projektmanagementumfeld",
+          "punkte": 5
+        }
+      ],
+      "max_punkte_erfahrungen": 35,
+      "profilinhalt": {
+        "kriterien": [
+          "Fachlicher Schwerpunkt der Projekte",
+          "Umfeld der Projektarbeit (Vorgehensmodell, Tools, PMO)",
+          "Komplexität der Projekte (Inhalt, Dauer, Budget)"
+        ],
+        "max_punkte": 30
+      },
+      "gesamtpunktzahl_max": 100,
+      "mindestpunktzahl": 60
+    },
+    "los_2_bewertungsmatrix": {
+      "methodische_kenntnisse": [
+        {
+          "kriterium": "Mind. 8 Jahre Projektmanagement-Kenntnisse",
+          "punkte": 2.5
+        },
+        {
+          "kriterium": "Zertifizierung nach IPMA mind. Level D oder vergleichbar",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 8 Jahre Projektmanagementtätigkeiten in IT-Projekten als gesamtverantwortlicher Projektleiter",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 8 Jahre im Programm-Management",
+          "punkte": 2.5
+        },
+        {
+          "kriterium": "Mind. 8 Jahre Kenntnisse in Projektreporting und -controlling",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 3 Jahre Fachexpertise gesetzliche Unfallversicherungen",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 8 Jahre Kenntnisse in PM-Werkzeugen (MS-Project, VISIO, Office, Confluence, Jira)",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 8 Jahre Kenntnisse in skalierten agilen Frameworks (bevorzugt SAFe)",
+          "punkte": 5
+        }
+      ],
+      "max_punkte_methodische_kenntnisse": 35,
+      "erfahrungen": [
+        {
+          "kriterium": "Mind. 8 Jahre Programm- und/oder Projektmanagementerfahrung in verantwortlicher Projektleitungsfunktion",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 3 Jahre Erfahrung als gesamtverantwortlicher Projektleiter im Sozialversicherungsumfeld",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 8 Jahre Erfahrungen IT-Servicemanagement nach ITIL",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 8 Jahre Erfahrungen in Projekten nach standardisiertem Vorgehensmodell (IPMA/GPM)",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 8 Jahre Erfahrung in der Führung großer und heterogener Teams",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 8 Jahre Präsentations- und Moderationserfahrungen vor Fachpublikum, Projektgremien und gehobenem Management",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 5 Jahre Beratungskompetenz im methodischen Projektmanagementumfeld",
+          "punkte": 5
+        }
+      ],
+      "max_punkte_erfahrungen": 35,
+      "profilinhalt": {
+        "kriterien": [
+          "Fachlicher Schwerpunkt der Projekte",
+          "Umfeld der Projektarbeit (Vorgehensmodell, Tools, PMO)",
+          "Komplexität der Projekte (Inhalt, Dauer, Budget)"
+        ],
+        "max_punkte": 30
+      },
+      "gesamtpunktzahl_max": 100,
+      "mindestpunktzahl": 60
+    },
+    "los_3_bewertungsmatrix": {
+      "methodische_kenntnisse": [
+        {
+          "kriterium": "Mind. 2 Jahre Projekterfahrung als Assistenz in IT-Projekten (idealerweise nach IPMA-Standard)",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 2 Jahre Kenntnisse bei projektunterstützenden Aufgaben",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 2 Jahre Kenntnisse in der Unterstützung des Projektcontrollings",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 2 Jahre Kenntnisse in der Durchführung von Projektreporting",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 2 Jahre Kenntnisse in PM-Werkzeugen (MS-Project, VISIO, Office)",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 2 Jahre Kenntnisse in der Anwendung von JIRA",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 2 Jahre Kenntnisse in der Anwendung von Confluence",
+          "punkte": 5
+        }
+      ],
+      "max_punkte_methodische_kenntnisse": 35,
+      "erfahrungen": [
+        {
+          "kriterium": "Mind. 2 Jahre Projekterfahrung im PMO eines IT-Dienstleisters",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 2 Jahre Projekterfahrung im Sozialversicherungsumfeld (bevorzugt Berufsgenossenschaften)",
+          "punkte": 10
+        },
+        {
+          "kriterium": "Mind. 2 Jahre Erfahrungen IT-Servicemanagement nach ITIL",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 2 Jahre Erfahrungen im visuellen und inhaltlichen Vorbereiten von Projektterminen",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 2 Jahre Präsentations- und Moderationserfahrungen",
+          "punkte": 5
+        },
+        {
+          "kriterium": "Mind. 2 Jahre Erfahrung in der Zusammenarbeit in großen und heterogenen Teams",
+          "punkte": 5
+        }
+      ],
+      "max_punkte_erfahrungen": 35,
+      "profilinhalt": {
+        "kriterien": [
+          "Fachlicher Schwerpunkt der Projekte",
+          "Umfeld der Projektarbeit (Vorgehensmodell, Tools, PMO)",
+          "Komplexität der Projekte (Inhalt, Dauer, Budget)"
+        ],
+        "max_punkte": 30
+      },
+      "gesamtpunktzahl_max": 100,
+      "mindestpunktzahl": 60
+    }
+  }
+}

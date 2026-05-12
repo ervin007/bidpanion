@@ -1,0 +1,208 @@
+"{
+""auftraggeber"": ""BG-Phoenics GmbH
+Vergabestelle
+Tiergartenstr. 39
+30559 Hannover"",
+""projektbeschreibung"": ""Die BG-Phoenics GmbH (auch „Auftraggeber“ oder „BGP“ genannt) ist IT-Dienstleister für Berufsgenossenschaften, andere Sozialversicherungsträger, deren Einrichtungen und ähnliche Organisationen. Gesellschafter des Aufraggebers sind die Berufsgenossenschaft der Bauwirtschaft (BG BAU) mit Sitz in Berlin, die Berufsgenossenschaft Nahrungsmittel und Gastgewerbe (BGN) mit Sitz in Mannheim und die Berufsgenossenschaft Rohstoffe und chemische Industrie (BG RCI) mit Sitz in Heidelberg.
+
+Ausschreibungsgegenstand sind Unterstützungsleistungen im Geschäftsbereich Projektsteuerung (im Weiteren auch PS genannt). Der Geschäftsbereich PS stellt Ihren Kunden eine umfangreiche Auswahl an verschiedenen Leistungen zur Verfügung. Der Leistungsbereich „Projektmanagement“ in dem Geschäftsbereich (PS) führt Projekte für seine Kunden die BG BAU, BGN, BG RCI sowie weitere Kunden im Sozialversicherungsumfeld und in den eigenen Geschäftsbereichen durch. Es werden im Projektmanagementumfeld diverse Kunden- und BGP-Projekte erwartet. Bei den möglichen Projekten handelt es sich unter anderem um verschiedenartige IT-Infrastrukturprojekte, aber auch um Projekte zur Softwareeinführung, Softwareentwicklung und im Umfeld Digitalisierung, Prozessautomatisierung und KI. Ein Bereich der Softwareentwicklung ist die durch BGP entwickelte Branchenlösung „phoenics.“. Diese workflow- gesteuerte und geschäftsprozessorientierte Anwendung ergibt ein hochintegriertes Gesamtsystem, das alle Fachanwendungen der gesetzlichen Unfallversicherungsträger in einer Lösung verbindet. Für die Projekte im Umfeld der Anwendungssoftware phoenics. wird das SAFe-Framework verwendet. Außerdem gelten die ITIL Standards der BG-Phoenics GmbH.
+
+Rahmenvertrag Unterstützungsleistungen im Geschäftsbereich Projektmanagement(PS) Los 1-3
+Gegenstand der Vergabe sind Unterstützungsleistungen im Geschäftsbereich Projektmanagement (PS). Ausgeschrieben werden drei Lose, innerhalb derer verschiedene Rollen zusammengefasst sind: Los 1: Projektmanager (3 Mitarbeiter pro Jahr) Los 2: Projektmanager Senior (9 Mitarbeiter pro Jahr) Los 3: Projektassistenz (3Mitarbeite Pro Jahr) Die Laufzeit des Rahmenvertrags beträgt 36 Monate mit einer Möglichkeit zur Vertragsverlängerung um jeweils weitere 12 Monate bis zu einer maximalen Laufzeit von 48 Monaten. Mindestabnahmen werden nicht zugesagt. 
+
+Der Ort der Leistungserbringung ist überwiegend remote geplant. Der Projektstandort ist München. Nach Absprache zwischen dem Auftraggeber und dem Auftragnehmer können auch Leistungen an anderen Standorten der BGP und dessen Kunden innerhalb Deutschlands an den Standorten des Kunden erbracht werden. Details dazu werden innerhalb der Leistungsbeschreibungen, die in den Miniwettbewerben übermittelt werden, definiert.
+
+Schritt 1: Abschluss von Rahmenverträgen
+Die Vergabestelle führt ein offenes Verfahren durch. Ausgeschrieben wird zunächst der Abschluss der Rahmenverträge mit mehreren Wirtschaftsteilnehmern, die jeweils losweise abgeschlossen werden. Zugelassen werden pro Los alle Wirtschaftsteilnehmer, die ihre Eignung nachgewiesen haben.
+Bewertet wird jeweils anhand der eingereichten Unterlagen, insbesondere der ausgefüllten Templates, Lebensläufe (CV), Projektreferenzen und
+Zertifikate/Schulungsnachweise. Die Profile, die aufgrund des Lebenslaufes und der nachgewiesenen Projektreferenzen Leistungen nachweisen, die uneingeschränkt mit der jeweils ausgeschriebenen Aufgabenstellung vergleichbar sind, erhalten die Maximalpunktzahl. Ist eine Projektreferenz nur eingeschränkt vergleichbar, etwa weil es sich nicht um eine vergleichbar komplexe Umgebung handelt, werden entsprechend weniger Punkte vergeben. Das Punktesystem ist in der jeweiligen Bewertungsmatrix pro Los zusammengefasst und als Anlage den Vergabeunterlagen beigefügt. Mindestens ein Profil muss den geforderten Anforderungen entsprechen und eine Mindestpunktzahl von 60 Punkten vorweisen. Wird die Mindestpunktzahl von 60 Punkten nicht erreicht ist das Profil nicht wertbar und führt zum Ausschluss.
+
+Schritt 2: Miniwettbewerb
+Nach Abschluss der Rahmenvereinbarung werden Miniwettbewerbe durchgeführt, die jeweils mit einer Angebotsfrist von ein bis zwei Wochen erfolgen. Innerhalb der Miniwettbewerbe wird das Datum, innerhalb dessen die Leistung zu erbringen ist, definiert."",
+""abgabetermin"":"" Angebotsfrist 16.08.2024 17:00:00
+Bindefrist 31.12.2024
+Versand Vorabinformation 11.09.2024
+
+Beginn 01.10.2024
+Ende 30.09.2028"",
+""unterlagenliste für das angebot"": ""- ERKLÄRUNG DES BIETERS / DER BIETERGEMEINSCHAFT ZUM NICHTVORLIEGEN VON AUSSCHLUSSGRÜNDEN
+	- VERPFLICHTUNGSERKLÄRUNG VON EINGEBUNDENEN DRITTUNTERNEHMEN
+	- ERKLÄRUNG DER BIETERGEMEINSCHAFT
+	- EIGENERKLÄRUNG DES BIETERS / BEWERBERS / DER BIETER-, BEWERBERGEMEINSCHAFT GEM. ARTIKEL 5 k) DER VERORDNUNG 833/2014
+	(EU) IN DER FASSUNG DES ART. 1 ZIFF. 23 DER VERORDNUNG (EU) 2022/576 DES RATES VOM 08. APRIL 20221
+	
+	- Eignung zur Berufsausübung
+		○ Angaben zum Firmenprofil 
+		○ Eigenerklärung über Ausschlussgründe 
+		○ Handelsregisterauszug 
+		○ Haftpflichtversicherung
+	- Wirtschaftliche und finanzielle Leistungsfähigkeit
+		○ Vorlage von Bilanzen oder Bilanzauszügen des Unternehmens für die letzten 3 Geschäftsjahre pro Jahr nach Maßgabe des §45 Abs. 4 Punkt 3. VgV 
+		○ Gesamtumsätze der letzten drei Geschäftsjahren jew. pro Geschäftsjahr 
+			§ Gesamtumsatz 2023 
+			§ Gesamtumsatz 2022 
+			§ Gesamtumsatz 2021 
+		○ Umsatz der letzten drei Geschäftsjahre im Bereich der Leistungsbeschreibung 
+			§ Gesamtumsatz 2023 
+			§ Gesamtumsatz 2022
+			§ Gesamtumsatz 2021"",
+""leistungsbeschreibung"": ""Geschätzter Wert ohne MwSt.: 14,400,000 Euro
+
+	- LOS 1: Unterstützungsleistungen in der Rolle eines „Projektmanagers“
+		○ Benötigt werden Unterstützungsleistungen von ca. drei (3) Mitarbeiter des Dienstleisters. Pro Mitarbeiter wird ein Volumen von ca. 1.600 Stunden pro Jahr kalkuliert, der Bedarf ist gleichbleibend in den Folgejahren
+	- LOS 2: Projektmanager Senior
+		○ Benötigt werden Unterstützungsleistungen von ca. neun (9) Mitarbeiter des Dienstleisters. Pro Mitarbeiter wird ein Volumen von ca. 1.600 Stunden pro Jahr kalkuliert., der Bedarf ist gleichbleibend in den Folgejahren
+	- LOS 3: Projektassistenz
+	Benötigt werden Unterstützungsleistungen von ca. drei (3) Mitarbeiter des Dienstleisters. Pro Mitarbeiter wird ein Volumen von ca. 1.600 Stunden pro Jahr kalkuliert., der Bedarf ist gleichbleibend in den Folgejahren"",
+""personalprofil"": ""LOS 1: Unterstützungsleistungen in der Rolle eines „Projektmanagers""
+	- drei (3) anonymisiertes Profil für die Rolle eines ´Projektmanager´ 
+	- Erforderliche Kenntnisse: 
+	a) Mindestens fünfjährige Projektmanagement-Kenntnisse 
+	b) eine Zertifizierung nach IPMA (Level D)oder vergleichbarer Zertifizierung, bspw. „Prince2 Foundation“ oder„Prince2 Agile Foundation“ 
+	c) Mindestens dreijährige Projektmanagementtätigkeiten in IT-Projekten 
+	d) Mindestens fünfjährige Erfahrungen im eigenständigen Aufsetzen und Durchführen eines Projektcontrollings 
+	e) Mindestens fünfjährige Erfahrungen in der eigenständigen Durchführung von Projektreporting 
+	f) Mindestens dreijährige Fachexpertise beim Thema „gesetzlichen Unfallversicherungen“ wie z.B. Kenntnissen über deren Geschäftsprozesse/Arbeitsabläufe und über den Aufbau-/Ablauforganisation einer gesetzlichen Unfallversicherung 
+	g) Mindestens fünfjährige Erfahrungen in der Anwendung von PM-Werkzeugen, insbesondere MS-Project, MS-VISIO sowie MS-Office-Umgebung, Kenntnisse im Umgang mit Atlassian-Produkten wie Confluence, Jira 
+	h) Mindestens dreijährige Kenntnisse in skalierten agilen Frameworks (bestenfalls SAFe) 
+	- Erfahrungen: 
+	a) Mindestens dreijährige Projektmanagementerfahrung in verantwortlicher Projektleitungsfunktion in einem Projektmanagementoffice eines IT-Dienstleisters 
+	b) Mindestens dreijährige Erfahrung als gesamtverantwortlicher Projektleiter im Sozialversicherungsumfeld (bevorzugt Berufsgenossenschaften) 
+	c)Mindestens fünfjährige Erfahrungen in einem Arbeitsumfeld mit IT Servicemanagement nach ITIL 
+	d) Mindestens fünfjährige Erfahrungen in der Durchführung von Projekten nach einem standardisierten Vorgehensmodell(wie z.B.: nach IPMA/GPM, Prince2) 
+	e) Mindestens fünfjährige Erfahrung in der Führung großer und sowohl fachlich als auch organisatorisch heterogen zusammengesetzter Teams (Erfahrungen in der Steuerung von externen Ressourcen sowie Ressourcen in matrixorganisierten Teams) 
+	f)Mindestens fünfjährige Präsentations- und Moderationserfahrungen vor Fachpublikum und Projektgremien 
+	g) Mindestens dreijährige Beratungskompetenz: 
+
+Los 2: Projektmanager Senior
+Benötigt werden Unterstützungsleistungen von ca. neun (9) Mitarbeiter des Dienstleisters. Pro Mitarbeiter wird ein Volumen von ca. 1.600 Stunden pro Jahr kalkuliert., der Bedarf ist gleichbleibend in den Folgejahren
+	- neun (9) anonymisiertes Profil für die Rolle eines ""Projektmanager Senior“ 
+	- Erforderliche Kenntnisse: 
+		○ Mindestens achtjährige Projektmanagement-Kenntnisse 
+		○ eine Zertifizierung nach IPMA (mind.Level D) oder einer vergleichbaren Zertifizierung 
+		○ Mindestens achtjährige Projektmanagementtätigkeiten in IT-Projekten als gesamtverantwortlicher Projektleiter 
+		○ Mindestens achtjährige im Programm-Management 
+		○ Mindestens achtjährige Kenntnisse in der eigenständigen Durchführung von Projektreporting und -controlling 
+		○ Mindestens dreijährige Fachexpertise beim Thema „gesetzlichen Unfallversicherungen“ wie z.B. fundierte Kenntnisse über deren Geschäftsprozesse/Arbeitsabläufe und über denAufbau-/Ablauforganisation einer gesetzlichen Unfallversicherung 
+		○ Mindestens achtjährige Kenntnisse in der Anwendung von PM-Werkzeugen, insbesondere MS-Project, MS-VISIO sowie MS-Office-Umgebung sowie Kenntnisse im Umgang mit Atlassian-Produkten wie Confluence, Jira 
+		○ Mindestens achtjährige Kenntnisse in skalierten agilen Frameworks (bestenfalls SAFe) 
+	- Erfahrungen: 
+		○ Mindestens achtjährige Programm- und/oder Projektmanagementerfahrung in verantwortlicher Projektleitungsfunktion 
+		○ Mindestens dreijährige Erfahrung als gesamtverantwortlicher Projektleiter im Sozialversicherungsumfeld(bevorzugt Berufsgenossenschaften) 
+		○ Mindestens achtjährige Erfahrungen in einem Arbeitsumfeld mit IT Servicemanagement nach ITIL. 
+		○ Mindestens achtjährige Erfahrungen Projekte nach einem standardisierten Vorgehensmodell (wie z.B.: nach IPMA/GPM) durchzuführen. 
+		○ Mindestens achtjährige Erfahrung in der Führung großer und sowohl fachlich als auch organisatorisch heterogen zusammengesetzter Teams. (Erfahrungen in der Steuerung von externen Ressourcen sowie Ressourcen in matrixorganisierten Teams). 
+		○ Mindestens achtjährige Präsentations- und Moderationserfahrungen vor Fachpublikum, Projektgremien und auf der Ebene des gehobenen Managements 
+		○ Mindestens fünfjährige Beratungskompetenz: Nachweis von Beratungskompetenz im methodischen Projektmanagementumfeld
+
+LOS 3: Unterstützungsleistungen in der Rolle einer „Projektassistenz“
+Benötigt werden Unterstützungsleistungenvon ca. drei (3) Mitarbeitern des Dienstleisters. Pro Mitarbeiter wird einVolumen von ca. 1.600 Stunden pro Jahr kalkuliert.
+	- Erforderliche Kenntnisse: 
+		○ Mindestens zweijährige Projekterfahrung als Assistenz in IT-Projekten (im Idealfall nach IPMA-Standard) 
+		○ Mindestens zweijährige Kenntnisse und Erfahrungen bei projektunterstützenden Aufgaben (Erstellung und Änderungen von Projektplanungsdokumenten, Protokoll, Terminkoordination, etc.) 
+		○ Mindestens zweijährige Kenntnisse in der Unterstützung des Projektcontrollings. 
+		○ Mindestens zweijährige Kenntnisse in der Durchführung von Projektreporting 
+		○ Mindestens zweijährige Kenntnisse in der Anwendung von Projektmanagement-Werkzeugen, insbesondere MS-Project, MS-VISIO sowie MS-Office-Umgebung. 
+		○ Mindestens zweijährige Kenntnisse in der Anwendung von JIRA als Projektmanagement-Tool zur Verfolgung offener Aufgaben 
+		○ Mindestens zweijährige Kenntnisse in der Anwendung von Confluence 
+	- Erfahrungen: 
+		○ Mindestens zweijährige Projekterfahrung (Mitarbeit, zumindest als Assistenz) im Projektmanagementoffice eines IT-Dienstleisters 
+		○ Mindestens zweijährige Projekterfahrung (Mitarbeit, zumindest als Assistenz) im Sozialversicherungsumfeld (bevorzugt Berufsgenossenschaften) 
+		○ Mindestens zweijährige Erfahrungen in einem Arbeitsumfeld mit ITServicemanagement nach ITIL 
+		○ Mindestens zweijährige Erfahrungen im Visuellen und inhaltlichen Vorbereiten von Projektterminen (Präsentationen erstellen, Status einholen und darstellen, Ausblick auf die nächsten Wochenvorbereiten, etc.) 
+		○ Mindestens zweijährige Präsentations- und Moderationserfahrungen 
+		○ Mindestens zweijährige Erfahrung in der Zusammenarbeit in großen und sowohl fachlich als auch organisatorisch heterogen zusammengesetzter Teams"", 
+""unternehmensreferenzen"":"""",
+""zuschlagskriterien"": ""Gesamtpreis: 40%
+Qualität (Das Kriterium Qualität wird anhand der beigefügten Bewertungsmatrix gem. Punktesystem bewertet.): 60%
+
+Leistungskriterien 
+- Methodische Kenntnisse: mind. 5 Jahre, Projektmanagement-Kenntnisse = 5 Punkte
+eine Zertifizierung nach IPMA (Level D) oder vergleichbarer Zertifizierung, bspw. „Prince2 Foundation“ oder „Prince2 Agile Foundation“ = 5 Punkte
+Mindestens dreijährige Projektmanagementtätigkeiten in IT-Projekten = 2,5 Punkte
+mind. 5 Jahre, Erfahrungen im eigenständigen Aufsetzen und Durchführen eines Projektcontrollings  = 2,5 Punkte
+mind. 5 Jahre, Erfahrungen in der eigenständigen Durchführung von Projektreporting = 5 Punkte
+Mindestens dreijährige Fachexpertise beim Thema „gesetzlichen Unfallversicherungen“ wie z.B. Kenntnissen über deren Geschäftsprozesse/Arbeitsabläufe und über den Aufbau-/Ablauforganisation einer gesetzlichen Unfallversicherung = 5 Punkte
+mind. 5 Jahre, Erfahrungen in der Anwendung von PM-Werkzeugen, insbesondere MS-Project, MS-VISIO sowie MS- Office-Umgebung, Kenntnisse im Umgang mit Atlassian-Produkten wie Confluence, Jira = 5 Punkte
+Mindestens dreijährige Kenntnisse in skalierten agilen Frameworks (bestenfalls SAFe)  = 5 Punkte
+max. Punkteanzahl = 35
+
+- Erfahrungen: Mind. 3 Jahren Projektmanagementerfahrung in verantwortlicher Projektleitungsfunktion in einem Projektmanagementoffice eines IT-Dienstleisters = 5 Punkte
+Mind. drei Jahren Erfahrung als gesamtverantwortlicher Projektleiter im Sozialversicherungsumfeld (bevorzugt Berufsgenossenschaften) = 5 Punkte
+Mind. 5 Jahre Erfahrungen in einem Arbeitsumfeld mit IT-Servicemanagement nach ITIL = 5 Punkte
+Mind. 5 Jahre Erfahrungen in der Durchführung von Projekten nach einem standardisierten Vorgehensmodell (wie z.B.: nach IPMA/GPM, Prince2) = 5 Punkte
+Mind. 5 Jahre Erfahrung in der Führung großer und sowohl fachlich als auch organisatorisch heterogen zusammengesetzter Teams (Erfahrungen in der Steuerung von externen Ressourcen sowie Ressourcen in matrixorganisierten Teams) = 5 Punkte
+Mind. 5 Jahre Präsentations- und Moderationserfahrungen vor Fachpublikum und Projektgremien = 5 Punkte
+Mind. 3 Jahren Beratungskompetenz: Nachweis von Beratungskompetenz im methodischen Projektmanagementumfeld = 5 Punkte
+max. Punkteanzahl = 35 Punkte
+
+- Profiinhalt
+fachlicher Schwerpunkt der Projekte
+Umfeld der Projektarbeit (z.B. Vorgehensmodell, Verwendung von Tools, Projektmanagementoffice Komplexität der Projekte (Inhalt, Dauer und Budget)
+max. Punkteanzahl = 30 Punkte
+
+- Gesamtpunktzahl Preis (maximal 60% Bewertung) = 100 Punkte
+(Mind. 1 Profil muss den geforderten Anforderungen entsprechen und eine Mindestpunktzahl von 60 Punkten vorweisen)
+
+
+Leistungskriterien 
+- Methodische Kenntnisse
+Mindestens achtjährige Projektmanagement-Kenntnisse = 2,5 Punkte 
+eine Zertifizierung nach IPMA (mind. Level D) oder einer vergleichbaren Zertifizierung = 5 Punkte
+Mindestens achtjährige Projektmanagementtätigkeiten in IT-Projekten als gesamtverantwortlicher Projektleiter = 5 Punkte
+Mindestens achtjährige im Programm-Management = 2,5 Punkte
+Mindestens achtjährige Kenntnisse in der eigenständigen Durchführung von Projektreporting und -controlling = 5 Punkte
+Mindestens dreijährige Fachexpertise beim Thema „gesetzlichen Unfallversicherungen“ wie z. B. fundierte Kenntnisse über deren Geschäftsprozesse/Arbeitsabläufe und über den Aufbau-/Ablauforganisation einer gesetzlichen Unfallversicherung = 5 Punkte
+Mindestens achtjährige Kenntnisse in der Anwendung von PM-Werkzeugen, insbesondere MS-Project, MS-VISIO sowie MS-Office-Umgebung sowie Kenntnisse im Umgang mit Atlassian-Produkten wie Confluence, Jira = 5 Punkte
+Mindestens achtjährige Kenntnisse in skalierten agilen Frameworks (bestenfalls SAFe) = 5 Punkte
+max. Punkteanzahl = 35 Punkte
+
+- Erfahrungen
+Mindestens achtjährige Programm- und/oder Projektmanagementerfahrung in verantwortlicher Projektleitungsfunktion = 5 Punkte
+Mindestens dreijährige Erfahrung als gesamtverantwortlicher Projektleiter im Sozialversicherungsumfeld (bevorzugt Berufsgenossenschaften) = 5 Punkte
+Mindestens achtjährige Erfahrungen in einem Arbeitsumfeld mit IT-Servicemanagement nach ITIL. = 5 Punkte
+Mindestens achtjährige Erfahrungen Projekte nach einem standardisierten Vorgehensmodell (wie z.B.: nach IPMA/GPM) durchzuführen. = 5 Punkte
+Mindestens achtjährige Erfahrung in der Führung großer und sowohl fachlich als auch organisatorisch heterogen zusammengesetzter Teams. (Erfahrungen in der Steuerung von externen Ressourcen sowie Ressourcen in matrixorganisierten Teams). = 5 Punkte
+Mindestens achtjährige Präsentations- und Moderationserfahrungen vor Fachpublikum, Projektgremien und auf der Ebene des gehobenen Managements = 5 Punkte
+Mindestens fünfjährige Beratungskompetenz: Nachweis von Beratungskompetenz im methodischen Projektmanagementumfeld) = 5 Punkte
+max. Punkteanzahl = 35 Punkte
+
+- Profiinhalt
+fachlicher Schwerpunkt der Projekte
+Umfeld der Projektarbeit (z.B. Vorgehensmodell, Verwendung von Tools, Projektmanagementoffice 
+Komplexität der Projekte (Inhalt, Dauer und Budget) max. Punkteanzahl
+max. Punkteanzahl = 30 Punkte
+
+Gesamtpunktzahl Preis (maximal 60% Bewertung) = 100 Punkte
+(Mind. 1 Profil muss den geforderten Anforderungen entsprechen und eine Mindestpunktzahl von 60 Punkten vorweisen)
+
+
+Leistungskriterien 
+- Methodische Kenntnisse
+Mindestens zweijährige Projekterfahrung als Assistenz in IT-Projekten (im Idealfall nach IPMA-Standard)  = 5 Punkte
+Mindestens zweijährige Kenntnisse und Erfahrungen bei projektunterstützenden Aufgaben (Erstellung und Änderungen von Projektplanungsdokumenten, Protokoll, Terminkoordination, etc.) = 5 Punkte
+Mindestens zweijährige Kenntnisse in der Unterstützung des Projektcontrollings. = 5 Punkte
+Mindestens zweijährige Kenntnisse in der Durchführung von Projektreporting  = 5 Punkte
+Mindestens zweijährige Kenntnisse in der Anwendung von Projektmanagement-Werkzeugen, insbesondere MS- Project, MS-VISIO sowie MS-Office-Umgebung = 5 Punkte
+Aufgaben  = 5 Punkte
+Mindestens zweijährige Kenntnisse in der Anwendung von Confluence = 5 Punkte
+max. Punkteanzahl  = 35 Punkte
+
+- Erfahrungen
+Mindestens zweijährige Projekterfahrung (Mitarbeit, zumindest als Assistenz) im Projektmanagementoffice eines IT- Dienstleisters  = 5 Punkte
+Mindestens zweijährige Projekterfahrung (Mitarbeit, zumindest als Assistenz) im Sozialversicherungsumfeld (bevorzugt Berufsgenossenschaften)  = 10 Punkte
+Mindestens zweijährige Erfahrungen in einem Arbeitsumfeld mit IT-Servicemanagement nach ITIL  = 5 Punkte
+Mindestens zweijährige Erfahrungen im Visuellen und inhaltlichen Vorbereiten von Projektterminen (Präsentationen erstellen, Status einholen und darstellen, Ausblick auf die nächsten Wochen vorbereiten, etc.)  = 5 Punkte
+Mindestens zweijährige Präsentations- und Moderationserfahrungen = 5 Punkte
+Mindestens zweijährige Erfahrung in der Zusammenarbeit in großen und sowohl fachlich als auch organisatorisch heterogen zusammengesetzter Teams = 5 Punkte
+max. Punkteanzahl = 35 Punkte
+
+- Profiinhalt
+fachlicher Schwerpunkt der Projekte
+Umfeld der Projektarbeit (z.B. Vorgehensmodell, Verwendung von Tools, Projektmanagementoffice Komplexität der Projekte (Inhalt, Dauer und Budget)
+max. Punkteanzahl  = 30 Punkte
+
+Gesamtpunktzahl Preis (maximal 60% Bewertung) = 100 Punkte
+(Mind. 1 Profil muss den geforderten Anforderungen entsprechen und eine Mindestpunktzahl von 60 Punkten vorweisen)""
+
+}"
