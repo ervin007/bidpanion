@@ -153,7 +153,6 @@ cython_debug/
 
 # Project Specific
 chroma_db/
-vectorstore/
 output/
 bm25_index.pkl
 *.json
