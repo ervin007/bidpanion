@@ -131,20 +131,23 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-[#f8f9fa] text-slate-800">
+      <div className="flex flex-col items-center justify-center h-screen bg-white text-slate-800">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-6"></div>
-        <p className="text-lg font-black animate-pulse tracking-widest uppercase">Initializing UI...</p>
+        <p className="text-lg font-black animate-pulse tracking-widest uppercase">Aligning Panels...</p>
       </div>
     );
   }
 
   const allExpanded = Object.keys(data.results).filter(k => k !== 'citations').every(k => expandedSections[k]);
 
+  // Common Header Style for perfect alignment
+  const HEADER_CLASS = "h-20 border-b border-slate-200 bg-white flex items-center px-8 shrink-0";
+
   return (
     <div className="flex h-screen bg-white overflow-hidden text-slate-800 font-sans">
-      {/* Left Sidebar (Only one meant to feel separate) */}
-      <div className="w-72 bg-slate-50 border-r border-slate-200 flex flex-col z-10 shadow-sm">
-        <div className="p-6 border-b border-slate-200 bg-white">
+      {/* Left Sidebar */}
+      <div className="w-72 bg-slate-50 border-r border-slate-200 flex flex-col z-10">
+        <div className={HEADER_CLASS}>
           <div className="flex items-center gap-3">
             <div className="bg-blue-600 p-2 rounded-lg shadow-lg shadow-blue-600/20 text-white">
               <FileText size={18} />
@@ -176,22 +179,24 @@ export default function App() {
       {/* Parallel Workspace Container */}
       <div className="flex-1 flex overflow-hidden">
         {/* Document View Panel */}
-        <div className="flex-1 overflow-y-auto bg-slate-50/30 scroll-smooth border-r border-slate-100" ref={docRef}>
-          <div className="sticky top-0 z-20 bg-white/90 backdrop-blur-md px-10 py-5 border-b border-slate-200 flex justify-between items-center">
+        <div className="flex-1 flex flex-col bg-slate-50/30 overflow-hidden border-r border-slate-100">
+          <div className={HEADER_CLASS + " justify-between"}>
             <div className="flex items-center gap-3">
                <span className="px-2 py-1 bg-slate-100 text-[9px] font-black text-slate-500 rounded uppercase tracking-widest">Document</span>
                <ChevronRight size={14} className="text-slate-300" />
-               <span className="text-xs font-bold text-slate-900">{selectedDoc}</span>
+               <span className="text-xs font-bold text-slate-900 truncate max-w-[200px]">{selectedDoc}</span>
             </div>
           </div>
-          <div className="max-w-4xl mx-auto">
-            {renderContent()}
+          <div className="flex-1 overflow-y-auto scroll-smooth" ref={docRef}>
+            <div className="max-w-4xl mx-auto">
+              {renderContent()}
+            </div>
           </div>
         </div>
 
-        {/* Results Analysis Panel (No shadow, strictly parallel) */}
+        {/* Results Analysis Panel */}
         <div className="w-[500px] flex flex-col bg-white overflow-hidden">
-          <div className="px-8 py-5 border-b border-slate-200 flex justify-between items-center bg-white">
+          <div className={HEADER_CLASS + " justify-between"}>
             <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 flex items-center gap-2">
               <List size={14} className="text-blue-600" /> Extraction Results
             </h2>
