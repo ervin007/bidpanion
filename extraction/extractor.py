@@ -46,14 +46,14 @@ Spezifische Anweisung: {instruction}
 WICHTIG: Sei so detailliert wie möglich. Wenn du die Information nicht findest, gib den Status 'confirmed_absent' oder 'retrieval_gap' an.""")
     ])
     
-    context_str = "\n\n".join([f"[Chunk {d.metadata.get('chunk_index', '?')}]\n{d.page_content}" for d in context_chunks])
-    
-    chain = prompt | structured_llm
-    
     import time
-    
     max_retries = 5
+    current_chunks = context_chunks[:]
+    
     for attempt in range(max_retries):
+        context_str = "\n\n".join([f"[Chunk {d.metadata.get('chunk_index', '?')}]\n{d.page_content}" for d in current_chunks])
+        chain = prompt | structured_llm
+        
         try:
             result = chain.invoke({
                 "context": context_str,
@@ -62,10 +62,19 @@ WICHTIG: Sei so detailliert wie möglich. Wenn du die Information nicht findest,
             }, config={"callbacks": callbacks or [], "tags": tags or []})
             return result.dict()
         except Exception as e:
-            if "429" in str(e) or "Resource exhausted" in str(e) or "quota" in str(e).lower():
-                wait_time = 60 * (attempt + 1)
+            err_msg = str(e).lower()
+            if any(x in err_msg for x in ["429", "resource exhausted", "quota"]):
+                wait_time = 1
                 print(f"\n[Rate Limit] Hit API limits for {field_cfg['id']}. Retrying in {wait_time}s... (Attempt {attempt + 1}/{max_retries})")
                 time.sleep(wait_time)
+            elif any(x in err_msg for x in ["400", "context limit", "too many tokens", "exceeds the maximum"]):
+                if len(current_chunks) > 5:
+                    new_len = int(len(current_chunks) * 0.7)
+                    print(f"\n[Context Limit] Reducing context from {len(current_chunks)} to {new_len} chunks for {field_cfg['id']} and retrying...")
+                    current_chunks = current_chunks[:new_len]
+                else:
+                    print(f"\n[Context Limit] Cannot reduce context further for {field_cfg['id']}.")
+                    break
             else:
                 print(f"\nExtraction API failed for field {field_cfg['id']}: {e}")
                 return {"value": None, "chunk_index": None, "status": "retrieval_gap"}

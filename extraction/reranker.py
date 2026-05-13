@@ -23,24 +23,25 @@ def rerank(query: str, docs: list[Document], top_k: int = 25, callbacks: list = 
         timeout=60
     )
     
-    # Safeguard: Cap the number of chunks we send to Gemini for reranking.
-    # With 2000-char previews, 100 chunks is ~200k chars (~50k tokens),
-    # which is well within Vertex AI limits.
-    max_input_docs = 100
-    input_docs = docs[:max_input_docs]
+    import time
+    max_retries = 5
+    current_max_docs = 100
     
-    # Format the documents into a numbered list, with truncated previews to save tokens
-    # and stay within request size limits.
-    docs_text = ""
-    for i, d in enumerate(input_docs):
-        # Use first 2000 chars for reranking decision - usually enough to see context
-        preview = d.page_content[:2000].replace("\n", " ")
-        docs_text += f"[{i}] {preview}...\n\n"
-    
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", "Du bist ein Experte für Informationsabruf. Deine Aufgabe ist es, Textabschnitte nach ihrer Relevanz für eine gegebene Suchanfrage zu bewerten. Nutze die Textausschnitte, um zu entscheiden, welche Abschnitte die Antwort enthalten."),
-        ("human", f"""Bewerte die folgenden Textabschnitte basierend darauf, wie gut sie die Suchanfrage beantworten.
+    for attempt in range(max_retries):
+        input_docs = docs[:current_max_docs]
         
+        # Format the documents into a numbered list, with truncated previews to save tokens
+        # and stay within request size limits.
+        docs_text = ""
+        for i, d in enumerate(input_docs):
+            # Use first 2000 chars for reranking decision - usually enough to see context
+            preview = d.page_content[:2000].replace("\n", " ")
+            docs_text += f"[{i}] {preview}...\n\n"
+        
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", "Du bist ein Experte für Informationsabruf. Deine Aufgabe ist es, Textabschnitte nach ihrer Relevanz für eine gegebene Suchanfrage zu bewerten. Nutze die Textausschnitte, um zu entscheiden, welche Abschnitte die Antwort enthalten."),
+            ("human", f"""Bewerte die folgenden Textabschnitte basierend darauf, wie gut sie die Suchanfrage beantworten.
+            
 Suchanfrage: {{query}}
 
 Textabschnitte:
@@ -48,14 +49,10 @@ Textabschnitte:
 
 Gib AUSSCHLIESSLICH ein JSON-Array mit den Indizes der {{top_k}} relevantesten Abschnitte zurück, sortiert nach absteigender Relevanz.
 Beispiel: [12, 4, 0, 45, 8]""")
-    ])
-    
-    chain = prompt | llm
-    
-    import time
-    
-    max_retries = 5
-    for attempt in range(max_retries):
+        ])
+        
+        chain = prompt | llm
+        
         try:
             response = chain.invoke({
                 "query": query,
@@ -90,10 +87,18 @@ Beispiel: [12, 4, 0, 45, 8]""")
                             
             return ranked_docs
         except Exception as e:
-            if "429" in str(e) or "Resource exhausted" in str(e) or "quota" in str(e).lower():
-                wait_time = 60 * (attempt + 1)
+            err_msg = str(e).lower()
+            if any(x in err_msg for x in ["429", "resource exhausted", "quota"]):
+                wait_time = 1
                 print(f"\n[Rate Limit] Reranker hit API limits. Retrying in {wait_time}s... (Attempt {attempt + 1}/{max_retries})")
                 time.sleep(wait_time)
+            elif any(x in err_msg for x in ["400", "context limit", "too many tokens", "exceeds the maximum"]):
+                if current_max_docs > 10:
+                    current_max_docs = int(current_max_docs * 0.7)
+                    print(f"\n[Context Limit] Reducing reranker input to {current_max_docs} docs and retrying...")
+                else:
+                    print("\n[Context Limit] Cannot reduce reranker input further.")
+                    break
             else:
                 print(f"LLM Reranking failed: {e}. Falling back to original RRF order.")
                 return docs[:top_k]

@@ -16,9 +16,10 @@ def build_vectorstore(documents, collection_name=None):
     embeddings = get_embeddings()
     collection = collection_name or CHROMA_COLLECTION
     
-    # Vertex AI has a strict limit of 250 instances per prediction request.
-    # We will use a batch size of 100 to stay well within limits.
-    batch_size = 100
+    # Vertex AI has a strict limit of 250 instances per prediction request,
+    # but ALSO a token limit (e.g. 20,000 tokens for some models/regions).
+    # Since our chunks can be large (~1,900 tokens), we use a small batch size.
+    batch_size = 5
     
     # Initialize the vectorstore with the first batch to set up the collection
     first_batch = documents[:batch_size]

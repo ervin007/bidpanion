@@ -127,11 +127,7 @@ def main():
             warnings.append(f"Mandatory field missing: {field['id']} (Reason: {result.get('status')})")
             
         logging.info(f"=== FINISHED FIELD: {field['id']} ===")
-        
-        # Professional Rate Limiting Pause
-        import time
-        logging.info("  [Rate Limit] Pausing for 10 seconds to prevent Vertex AI Quota Exhaustion...")
-        time.sleep(10)
+
 
     # Combine into final JSON format
     final_output["citations"] = citations
