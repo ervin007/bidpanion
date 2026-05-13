@@ -189,7 +189,7 @@ services:
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
     ports:
-      - 8080:8080
+      - 8181:8080
 
   temporal-postgresql:
     image: docker.io/postgres:13
@@ -220,7 +220,7 @@ services:
     build: .
     restart: always
     ports:
-      - 8000:8000
+      - 8100:8000
     volumes:
       - .:/app
     command: python serve_data.py
