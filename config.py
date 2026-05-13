@@ -1,7 +1,17 @@
 import os
+import base64
+import tempfile
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# Decode Google credentials from base64 env var if provided (works with any build system)
+_creds_b64 = os.environ.get("GOOGLE_CREDENTIALS_JSON")
+if _creds_b64 and not os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"):
+    _creds_file = tempfile.NamedTemporaryFile(delete=False, suffix=".json")
+    _creds_file.write(base64.b64decode(_creds_b64))
+    _creds_file.close()
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = _creds_file.name
 
 # Vertex AI Settings
 VERTEX_PROJECT_ID    = "project-8cf22686-23da-490c-926"
