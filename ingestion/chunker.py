@@ -31,7 +31,7 @@ def load_and_chunk(txt_path: str) -> list[Document]:
             separators=SEPARATORS
         )
         raw_chunks = splitter.split_text(raw_text)
-        return [Document(page_content=c, metadata={"chunk_index": i}) for i, c in enumerate(raw_chunks)]
+        return [Document(page_content=c, metadata={"chunk_index": i, "source": txt_path}) for i, c in enumerate(raw_chunks)]
 
     documents = []
     chunk_size_pages = 5

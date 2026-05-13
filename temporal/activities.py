@@ -73,7 +73,8 @@ class ExtractionActivities:
             docs = await asyncio.to_thread(
                 hybrid_retrieve,
                 self._vectorstore, self._bm25_index, self._bm25_docs, query,
-                dense_k=TOP_K_DENSE, sparse_k=TOP_K_SPARSE, final_k=TOP_K_FINAL
+                dense_k=TOP_K_DENSE, sparse_k=TOP_K_SPARSE, final_k=TOP_K_FINAL,
+                metadata_filter={"source": input_file}
             )
             all_retrieved.extend(docs)
 

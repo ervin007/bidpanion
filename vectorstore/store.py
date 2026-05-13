@@ -16,6 +16,18 @@ def build_vectorstore(documents, collection_name=None):
     embeddings = get_embeddings()
     collection = collection_name or CHROMA_COLLECTION
     
+    # Isolation: clear existing collection if it exists to prevent mixing tenders
+    try:
+        existing_vstore = Chroma(
+            persist_directory=CHROMA_PERSIST_DIR,
+            collection_name=collection,
+            embedding_function=embeddings
+        )
+        existing_vstore.delete_collection()
+        print(f"  Cleared existing collection: {collection}")
+    except Exception:
+        pass
+
     # Vertex AI has a strict limit of 250 instances per prediction request,
     # but ALSO a token limit (e.g. 20,000 tokens for some models/regions).
     # Since our chunks can be large (~1,900 tokens), we use a small batch size.
