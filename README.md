@@ -22,14 +22,15 @@ docker compose up -d --build
 ```
 
 ### 3. Run Analysis
-Trigger the extraction pipeline for documents in `input/`:
+Trigger extraction for a specific document (e.g., `tender_a.txt`):
 ```bash
-docker compose exec bidpanion-worker python -m temporal.run_workflow
+docker compose exec bidpanion-worker python -m temporal.run_workflow <filename.txt>
 ```
 
 ### 4. Verify Results
 Open the interactive dashboard to verify citations:
 👉 **[http://localhost:5173](http://localhost:5173)**
+
 
 ---
 
