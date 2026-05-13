@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Search, FileText, CheckCircle2, AlertCircle, ExternalLink, 
-  ChevronRight, Hash, ChevronLeft, List 
+  FileText, CheckCircle2, AlertCircle, ChevronRight, 
+  Hash, ChevronLeft, List, ChevronDown, ChevronUp,
+  Maximize2, Minimize2
 } from 'lucide-react';
 
 const API_BASE = 'http://localhost:8000';
@@ -13,6 +14,7 @@ export default function App() {
   const [activeCitations, setActiveCitations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [expandedSections, setExpandedSections] = useState({});
   const docRef = useRef(null);
 
   useEffect(() => {
@@ -29,7 +31,6 @@ export default function App() {
         setLoading(false);
       })
       .catch(err => {
-        console.error("Fetch error:", err);
         setError(`Failed to load data: ${err.message}. Ensure the Data Server is running on port 8000.`);
         setLoading(false);
       });
@@ -43,136 +44,141 @@ export default function App() {
     }
   }, [selectedDoc]);
 
-  // Logic to map chunk index to page range (based on 5-page chunks with 1-page overlap)
-  const getPagesForChunk = (chunkIdx) => {
+  // Logic to map chunk index to global page indices (step of 4)
+  const getGlobalPageRange = (chunkIdx) => {
     const CHUNK_SIZE = 5;
-    const OVERLAP = 1;
-    const startPage = chunkIdx * (CHUNK_SIZE - OVERLAP) + 1;
-    const endPage = startPage + CHUNK_SIZE - 1;
-    return { start: startPage, end: endPage };
+    const STEP = 4;
+    const startGlobalIdx = chunkIdx * STEP;
+    const endGlobalIdx = startGlobalIdx + CHUNK_SIZE - 1;
+    return { start: startGlobalIdx, end: endGlobalIdx };
   };
 
   const handleJump = (chunkIdx) => {
-    const range = getPagesForChunk(chunkIdx);
+    const range = getGlobalPageRange(chunkIdx);
     setActiveCitations([chunkIdx]);
     
-    // Scroll to the first page of the chunk
     setTimeout(() => {
-      const el = document.getElementById(`page-${range.start}`);
+      const el = document.getElementById(`global-page-${range.start}`);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }, 50);
   };
 
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
+  };
+
+  const toggleAll = (expand) => {
+    const newState = {};
+    if (expand) {
+      Object.keys(data.results).forEach(k => {
+        if (k !== 'citations') newState[k] = true;
+      });
+    }
+    setExpandedSections(newState);
+  };
+
   const renderContent = () => {
-    if (!docContent) return <div className="p-12 text-slate-400">Select a document to begin...</div>;
+    if (!docContent) return <div className="p-12 text-slate-400 font-medium">Select a document to begin...</div>;
 
-    // Split by page markers: === Page X ===
-    const pageParts = docContent.split(/=== Page (\d+) ===/);
-    if (pageParts.length <= 1) {
-       return <pre className="whitespace-pre-wrap p-12">{docContent}</pre>;
-    }
-
+    const pageMarkerRegex = /=== Page (\d+) ===/g;
+    const parts = docContent.split(pageMarkerRegex);
+    
     const elements = [];
-    // pageParts[0] is header info
-    if (pageParts[0].trim()) {
-        elements.push(<div key="header" className="p-12 border-b border-slate-100 text-slate-400 italic">{pageParts[0]}</div>);
+    if (parts[0].trim()) {
+        elements.push(<div key="header" className="p-10 border-b border-slate-100 text-slate-400 italic text-sm">{parts[0]}</div>);
     }
 
-    for (let i = 1; i < pageParts.length; i += 2) {
-      const pageNum = parseInt(pageParts[i]);
-      const pageText = pageParts[i + 1];
-      
-      // Determine if this page is part of the currently active chunk(s)
+    let globalPageIdx = 0;
+    for (let i = 1; i < parts.length; i += 2) {
+      const pageLabel = parts[i];
+      const pageText = parts[i + 1];
+      const currentIdx = globalPageIdx;
+
       const isHighlighted = activeCitations.some(idx => {
-        const range = getPagesForChunk(idx);
-        return pageNum >= range.start && pageNum <= range.end;
+        const range = getGlobalPageRange(idx);
+        return currentIdx >= range.start && currentIdx <= range.end;
       });
 
       elements.push(
         <div 
-          key={pageNum} 
-          id={`page-${pageNum}`}
-          className={`relative mb-12 p-12 transition-all rounded-3xl border ${
+          key={globalPageIdx} 
+          id={`global-page-${globalPageIdx}`}
+          className={`relative mb-10 p-10 transition-all rounded-3xl border ${
             isHighlighted 
-              ? 'bg-blue-50/50 border-blue-200 ring-4 ring-blue-500/5 shadow-2xl' 
-              : 'bg-white border-slate-100 shadow-sm'
+              ? 'bg-blue-50 border-blue-300 ring-8 ring-blue-500/5 shadow-2xl z-10 scale-[1.01]' 
+              : 'bg-white border-slate-100 shadow-sm opacity-90'
           }`}
         >
-          <div className="absolute -top-4 left-8 px-4 py-1 bg-slate-900 text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-lg">
-            Page {pageNum}
+          <div className="absolute -top-4 left-8 flex gap-2">
+            <span className="px-3 py-1 bg-slate-900 text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-md">
+              Page {pageLabel}
+            </span>
+            <span className="px-3 py-1 bg-slate-200 text-slate-500 text-[10px] font-black rounded-full uppercase tracking-widest">
+              Index {globalPageIdx}
+            </span>
           </div>
           <pre className="whitespace-pre-wrap font-mono text-[13px] leading-relaxed text-slate-700">
             {pageText.trim()}
           </pre>
         </div>
       );
+      globalPageIdx++;
     }
 
-    return <div className="p-12 space-y-8">{elements}</div>;
+    return <div className="p-12 space-y-4">{elements}</div>;
   };
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-white text-slate-800">
-        <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-6"></div>
-        <p className="text-lg font-semibold animate-pulse tracking-wide">Syncing Chunks...</p>
+      <div className="flex flex-col items-center justify-center h-screen bg-[#f8f9fa] text-slate-800">
+        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-6"></div>
+        <p className="text-lg font-black animate-pulse tracking-widest uppercase">Initializing UI...</p>
       </div>
     );
   }
 
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen bg-white p-12 text-center">
-        <AlertCircle size={48} className="text-red-500 mb-6" />
-        <h2 className="text-2xl font-bold text-slate-900 mb-3">Connection Error</h2>
-        <p className="text-slate-500 max-w-md text-lg">{error}</p>
-        <button onClick={() => window.location.reload()} className="mt-8 px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold">Retry</button>
-      </div>
-    );
-  }
+  const allExpanded = Object.keys(data.results).filter(k => k !== 'citations').every(k => expandedSections[k]);
 
   return (
-    <div className="flex h-screen bg-white overflow-hidden text-slate-800">
+    <div className="flex h-screen bg-[#f8f9fa] overflow-hidden text-slate-800 font-sans">
       {/* Sidebar */}
-      <div className="w-80 bg-slate-50 border-r border-slate-200 flex flex-col">
-        <div className="p-8 border-b border-slate-200 bg-white shadow-sm">
+      <div className="w-80 bg-white border-r border-slate-200 flex flex-col shadow-sm">
+        <div className="p-8 border-b border-slate-200">
           <div className="flex items-center gap-3">
-            <div className="bg-blue-600 p-2.5 rounded-xl shadow-lg shadow-blue-600/30">
-              <FileText size={20} className="text-white" />
+            <div className="bg-blue-600 p-2.5 rounded-xl shadow-lg shadow-blue-600/30 text-white">
+              <FileText size={20} />
             </div>
             <div>
-              <h1 className="text-lg font-black text-slate-900 tracking-tight leading-none">BIDPANION</h1>
-              <p className="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-[0.2em]">Chunk Visualizer</p>
+              <h1 className="text-lg font-black text-slate-900 tracking-tighter leading-none">BIDPANION</h1>
+              <p className="text-[10px] text-slate-400 mt-1 uppercase font-black tracking-widest">Global Verifier</p>
             </div>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto p-6 space-y-3">
+        <div className="flex-1 overflow-y-auto p-6 space-y-2">
           {data.documents.map(doc => (
             <button
               key={doc}
               onClick={() => setSelectedDoc(doc)}
               className={`w-full flex items-center gap-3 px-5 py-4 rounded-2xl transition-all text-left ${
                 selectedDoc === doc 
-                  ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/20' 
-                  : 'hover:bg-slate-200/50 text-slate-600'
+                  ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/30' 
+                  : 'hover:bg-slate-100 text-slate-500'
               }`}
             >
-              <FileText size={18} className={selectedDoc === doc ? 'text-white' : 'text-slate-400'} />
-              <span className="text-sm font-bold truncate">{doc}</span>
+              <FileText size={18} />
+              <span className="text-xs font-black truncate uppercase tracking-wider">{doc}</span>
             </button>
           ))}
         </div>
       </div>
 
       {/* Document View */}
-      <div className="flex-1 overflow-y-auto bg-slate-50/30 scroll-smooth shadow-inner" ref={docRef}>
-        <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-xl px-10 py-6 border-b border-slate-200 flex justify-between items-center shadow-sm">
+      <div className="flex-1 overflow-y-auto bg-slate-50/50 scroll-smooth" ref={docRef}>
+        <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl px-10 py-6 border-b border-slate-200 flex justify-between items-center shadow-sm">
           <div className="flex items-center gap-3">
-             <div className="flex items-center gap-2 text-[11px] font-black text-slate-400 uppercase tracking-widest">
-               <FileText size={14} /> Document
-             </div>
+             <div className="px-3 py-1 bg-slate-100 text-[10px] font-black text-slate-500 rounded-lg uppercase tracking-widest">Tender Document</div>
              <ChevronRight size={14} className="text-slate-300" />
              <span className="text-sm font-bold text-slate-900">{selectedDoc}</span>
           </div>
@@ -183,31 +189,47 @@ export default function App() {
       </div>
 
       {/* Analysis Results Panel */}
-      <div className="w-[500px] bg-white border-l border-slate-200 overflow-y-auto shadow-2xl z-20">
-        <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md px-8 py-7 border-b border-slate-200">
-          <h2 className="text-sm font-black uppercase tracking-widest text-slate-900 flex items-center gap-2">
-            <List size={16} className="text-blue-600" /> Analysis Results
+      <div className="w-[550px] bg-white border-l border-slate-200 overflow-y-auto shadow-2xl z-20">
+        <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md px-8 py-7 border-b border-slate-200 flex justify-between items-center">
+          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-900 flex items-center gap-3">
+            <List size={16} className="text-blue-600" /> Extraction Results
           </h2>
+          
+          <button 
+            onClick={() => toggleAll(!allExpanded)}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all text-[10px] font-black uppercase tracking-widest text-slate-600 active:scale-95"
+          >
+            {allExpanded ? <><Minimize2 size={12} /> Collapse All</> : <><Maximize2 size={12} /> Expand All</>}
+          </button>
         </div>
-        <div className="p-8 space-y-10">
+        
+        <div className="p-8 space-y-4">
           {Object.entries(data.results).map(([section, value]) => {
             if (section === 'citations') return null;
+            const isExpanded = expandedSections[section];
             const isObject = typeof value === 'object' && value !== null && !Array.isArray(value);
+
             return (
-              <div key={section} className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">{section}</h3>
-                  <div className="h-[1px] flex-1 bg-slate-100"></div>
-                </div>
-                <div className="space-y-4">
-                {isObject ? (
-                   Object.entries(value).map(([field, val]) => (
-                     <FieldCard key={field} title={field} value={val} citationStr={data.results.citations?.sources[`${field}__quelle`]} onJump={handleJump} getPages={getPagesForChunk} />
-                   ))
-                ) : (
-                  <FieldCard title={section} value={value} citationStr={data.results.citations?.sources[`${section}__quelle`]} onJump={handleJump} getPages={getPagesForChunk} />
+              <div key={section} className={`border rounded-3xl overflow-hidden transition-all ${isExpanded ? 'border-blue-100 bg-blue-50/10 shadow-md' : 'border-slate-100 bg-white shadow-sm'}`}>
+                <button 
+                  onClick={() => toggleSection(section)}
+                  className={`w-full flex items-center justify-between px-6 py-5 transition-colors ${isExpanded ? 'bg-blue-50/30' : 'hover:bg-slate-50/50'}`}
+                >
+                  <h3 className={`text-[11px] font-black uppercase tracking-[0.1em] ${isExpanded ? 'text-blue-600' : 'text-slate-500'}`}>{section}</h3>
+                  {isExpanded ? <ChevronUp size={16} className="text-blue-500" /> : <ChevronDown size={16} className="text-slate-400" />}
+                </button>
+                
+                {isExpanded && (
+                  <div className="p-6 space-y-4 bg-white/50 backdrop-blur-sm border-t border-blue-50/50">
+                    {isObject ? (
+                       Object.entries(value).map(([field, val]) => (
+                         <FieldCard key={field} title={field} value={val} citationStr={data.results.citations?.sources[`${field}__quelle`]} onJump={handleJump} getRange={getGlobalPageRange} />
+                       ))
+                    ) : (
+                      <FieldCard title={section} value={value} citationStr={data.results.citations?.sources[`${section}__quelle`]} onJump={handleJump} getRange={getGlobalPageRange} />
+                    )}
+                  </div>
                 )}
-                </div>
               </div>
             );
           })}
@@ -217,7 +239,7 @@ export default function App() {
   );
 }
 
-function FieldCard({ title, value, citationStr, onJump, getPages }) {
+function FieldCard({ title, value, citationStr, onJump, getRange }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const citations = citationStr 
     ? String(citationStr).split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n))
@@ -238,44 +260,43 @@ function FieldCard({ title, value, citationStr, onJump, getPages }) {
   };
 
   const isFound = value && value !== "Not found" && (Array.isArray(value) ? value.length > 0 : true);
-  const currentRange = citations.length > 0 ? getPages(citations[activeIndex]) : null;
+  const currentRange = citations.length > 0 ? getRange(citations[activeIndex]) : null;
   
   return (
     <div 
-      className={`group p-6 rounded-3xl transition-all border shadow-sm ${
-        citations.length > 0 ? 'hover:border-blue-500/50 cursor-pointer bg-white' : 'bg-slate-50 border-slate-100 opacity-80'
+      className={`group p-6 rounded-2xl transition-all border ${
+        citations.length > 0 ? 'hover:border-blue-500/50 bg-white cursor-pointer border-slate-100 shadow-sm' : 'bg-slate-50/50 border-slate-100 opacity-60'
       }`}
       onClick={() => citations.length > 0 && onJump(citations[activeIndex])}
     >
-      <div className="flex justify-between items-start mb-6">
-        <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-wider group-hover:text-blue-600 transition-colors">{title}</h4>
-        
+      <div className="flex justify-between items-start mb-4">
+        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-tight pr-4">{title}</h4>
         {citations.length > 0 && (
-          <div className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-xl">
-             <button onClick={handlePrev} className="p-1.5 hover:bg-white rounded-lg transition-colors text-slate-400 hover:text-blue-600"><ChevronLeft size={14} /></button>
-             <div className="px-3 py-0.5 text-[10px] font-black text-slate-600 text-center min-w-[50px]">
+          <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-xl border border-slate-100">
+             <button onClick={handlePrev} className="p-1 hover:bg-white rounded-lg transition-colors text-slate-400"><ChevronLeft size={14} /></button>
+             <div className="px-2 py-0.5 text-[9px] font-black text-slate-600 min-w-[40px] text-center">
                {activeIndex + 1} / {citations.length}
              </div>
-             <button onClick={handleNext} className="p-1.5 hover:bg-white rounded-lg transition-colors text-slate-400 hover:text-blue-600"><ChevronRight size={14} /></button>
+             <button onClick={handleNext} className="p-1 hover:bg-white rounded-lg transition-colors text-slate-400"><ChevronRight size={14} /></button>
           </div>
         )}
       </div>
 
-      <div className="text-[14px] text-slate-700 leading-relaxed font-medium">
+      <div className="text-[13px] text-slate-700 leading-relaxed font-medium">
         {Array.isArray(value) ? (
-          <ul className="space-y-3">
+          <ul className="space-y-2">
             {value.map((item, i) => (
-              <li key={i} className="flex gap-4 items-start">
-                <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 shrink-0"></div>
+              <li key={i} className="flex gap-3 items-start">
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0"></div>
                 <span>{item}</span>
               </li>
             ))}
           </ul>
         ) : typeof value === 'object' && value !== null ? (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {Object.entries(value).map(([k, v]) => (
-              <div key={k} className="bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
-                <span className="text-[10px] text-slate-400 font-black uppercase block mb-1 tracking-widest">{k}</span>
+              <div key={k} className="bg-slate-50/30 p-3 rounded-xl border border-slate-100">
+                <span className="text-[9px] text-slate-400 font-black uppercase block mb-0.5 tracking-widest">{k}</span>
                 <span className="text-slate-800">{typeof v === 'object' ? JSON.stringify(v) : (v || 'Not found')}</span>
               </div>
             ))}
@@ -285,24 +306,22 @@ function FieldCard({ title, value, citationStr, onJump, getPages }) {
         )}
       </div>
 
-      <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+      <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-2">
           {isFound ? (
-            <div className="flex items-center gap-2 px-4 py-1.5 bg-emerald-50 rounded-full border border-emerald-100">
-              <CheckCircle2 size={14} className="text-emerald-500" />
-              <span className="text-[10px] text-emerald-600 font-black uppercase tracking-widest">Verified</span>
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full border border-emerald-100 text-[9px] font-black uppercase tracking-widest">
+              <CheckCircle2 size={12} /> Found
             </div>
           ) : (
-            <div className="flex items-center gap-2 px-4 py-1.5 bg-amber-50 rounded-full border border-amber-100">
-              <AlertCircle size={14} className="text-amber-500" />
-              <span className="text-[10px] text-amber-600 font-black uppercase tracking-widest">Absent</span>
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-600 rounded-full border border-amber-100 text-[9px] font-black uppercase tracking-widest">
+              <AlertCircle size={12} /> Missing
             </div>
           )}
         </div>
         
         {currentRange && (
-          <div className="flex items-center gap-2 px-4 py-1.5 bg-blue-50 rounded-full border border-blue-100 text-blue-600 text-[10px] font-black uppercase tracking-widest">
-            Pages {currentRange.start}–{currentRange.end} <Hash size={12} />
+          <div className="flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-600 rounded-full border border-blue-100 text-[9px] font-black uppercase tracking-widest">
+             Indices {currentRange.start}–{currentRange.end} <Hash size={10} />
           </div>
         )}
       </div>
