@@ -210,12 +210,28 @@ services:
       - TEMPORAL_URL=temporal:7233
       - GOOGLE_APPLICATION_CREDENTIALS=/app/project-8cf22686-23da-490c-926-b8b25c6d2a77.json
       - LANGFUSE_BASE_URL=http://langfuse-web:3000
-
     env_file:
       - .env
     volumes:
       - .:/app
     command: python -m temporal.worker
+
+  bidpanion-data-api:
+    build: .
+    restart: always
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+    command: python serve_data.py
+
+  bidpanion-viewer:
+    build: ./viewer
+    restart: always
+    ports:
+      - 5173:5173
+    depends_on:
+      - bidpanion-data-api
 
 
 volumes:
