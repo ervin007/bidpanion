@@ -165,6 +165,59 @@ services:
     volumes:
       - langfuse_postgres_data:/var/lib/postgresql/data
 
+  temporal:
+    image: docker.io/temporalio/auto-setup:1.24
+    restart: always
+    depends_on:
+      - temporal-postgresql
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=temporal-postgresql
+
+    ports:
+      - 7233:7233
+
+  temporal-ui:
+    image: docker.io/temporalio/ui:latest
+    restart: always
+
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+    ports:
+      - 8080:8080
+
+  temporal-postgresql:
+    image: docker.io/postgres:13
+    restart: always
+    environment:
+      - POSTGRES_USER=temporal
+      - POSTGRES_PASSWORD=temporal
+      - POSTGRES_DB=temporal
+    volumes:
+      - temporal_postgres_data:/var/lib/postgresql/data
+
+  bidpanion-worker:
+    build: .
+    restart: always
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_URL=temporal:7233
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/project-8cf22686-23da-490c-926-b8b25c6d2a77.json
+      - LANGFUSE_BASE_URL=http://langfuse-web:3000
+
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    command: python -m temporal.worker
+
+
 volumes:
   langfuse_postgres_data:
     driver: local
@@ -176,3 +229,6 @@ volumes:
     driver: local
   langfuse_redis_data:
     driver: local
+  temporal_postgres_data:
+    driver: local
+
