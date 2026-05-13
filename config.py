@@ -6,7 +6,6 @@ load_dotenv()
 # Vertex AI Settings
 VERTEX_PROJECT_ID    = "project-8cf22686-23da-490c-926"
 VERTEX_LOCATION      = "us-central1" # Ensure this matches your project's region
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(os.path.dirname(__file__), "project-8cf22686-23da-490c-926-b8b25c6d2a77.json")
 
 EMBEDDING_MODEL      = "text-embedding-004"
 LLM_MODEL            = "gemini-2.5-flash"

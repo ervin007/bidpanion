@@ -19,5 +19,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project files
 COPY . .
 
+# Entrypoint decodes Google credentials from env var at runtime
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
 # Default command (can be overridden in docker-compose)
 CMD ["python", "main.py"]
