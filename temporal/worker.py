@@ -16,7 +16,7 @@ async def main():
     # Create worker
     worker = Worker(
         client,
-        task_queue="bidpanion-task-queue",
+        task_queue="tender-extraction-queue",
         workflows=[TenderExtractionWorkflow, FieldExtractionWorkflow],
         activities=[
             activities.prepare_indices,
@@ -26,7 +26,7 @@ async def main():
         ],
     )
 
-    print(f"Worker started on queue 'bidpanion-task-queue' connecting to {temporal_url}")
+    print(f"Worker started on queue 'tender-extraction-queue' connecting to {temporal_url}")
     await worker.run()
 
 if __name__ == "__main__":

@@ -28,13 +28,13 @@ def extract_field(field_cfg: dict, context_chunks: list, callbacks: list = None,
     structured_llm = llm.with_structured_output(FieldExtraction)
     
     prompt = ChatPromptTemplate.from_messages([
-        ("system", f"""Du bist ein hochpräziser Analyst für deutsche Ausschreibungsunterlagen. 
+        ("system", """Du bist ein hochpräziser Analyst für deutsche Ausschreibungsunterlagen. 
 Deine Aufgabe ist es, Informationen VOLLSTÄNDIG und im ORIGINALWORTLAUT zu extrahieren. 
 Fasse niemals zusammen. Wenn mehrere Informationen (z.B. mehrere Termine oder Anforderungen) im Kontext stehen, extrahiere sie ALLE. 
 Wenn der Kontext Tabellen oder Listen enthält, gib diese strukturiert wieder.
 Antworte in der Sprache des Kontextes (Deutsch).
 
-{ROUTING_RULES}"""),
+{routing_rules}"""),
         ("human", """Hier ist der Kontext aus den Vergabeunterlagen:
 ----------
 {context}
@@ -56,6 +56,7 @@ WICHTIG: Sei so detailliert wie möglich. Wenn du die Information nicht findest,
         
         try:
             result = chain.invoke({
+                "routing_rules": ROUTING_RULES,
                 "context": context_str,
                 "query": field_cfg["queries"][0], # Use primary query for extraction instructions
                 "instruction": field_cfg["instruction"]
@@ -64,8 +65,9 @@ WICHTIG: Sei so detailliert wie möglich. Wenn du die Information nicht findest,
         except Exception as e:
             err_msg = str(e).lower()
             if any(x in err_msg for x in ["429", "resource exhausted", "quota"]):
-                wait_time = 1
-                print(f"\n[Rate Limit] Hit API limits for {field_cfg['id']}. Retrying in {wait_time}s... (Attempt {attempt + 1}/{max_retries})")
+                import random
+                wait_time = 5 + random.uniform(1, 5) # Add jitter
+                print(f"\n[Rate Limit] Hit API limits for {field_cfg['id']}. Retrying in {wait_time:.1f}s... (Attempt {attempt + 1}/{max_retries})")
                 time.sleep(wait_time)
             elif any(x in err_msg for x in ["400", "context limit", "too many tokens", "exceeds the maximum"]):
                 if len(current_chunks) > 5:

@@ -7,6 +7,8 @@ import logging
 with workflow.unsafe.imports_passed_through():
     from temporal.activities import ExtractionActivities
 
+from temporalio.common import RetryPolicy
+
 @workflow.defn
 class FieldExtractionWorkflow:
     @workflow.run
@@ -14,7 +16,8 @@ class FieldExtractionWorkflow:
         return await workflow.execute_activity_method(
             ExtractionActivities.extract_field_activity,
             args=[field_id, input_file],
-            start_to_close_timeout=timedelta(minutes=5),
+            start_to_close_timeout=timedelta(minutes=15),
+            retry_policy=RetryPolicy(maximum_attempts=1)
         )
 
 @workflow.defn
@@ -28,7 +31,8 @@ class TenderExtractionWorkflow:
             start_to_close_timeout=timedelta(minutes=10),
         )
 
-        # 2. Extract each field (can be parallelized)
+        # 2. Extract each field in batches to avoid overwhelming Vertex AI quota
+        # 2. Extract each field (Full Parallel)
         import asyncio
         extraction_futures = []
         for field in FIELDS:
@@ -36,7 +40,9 @@ class TenderExtractionWorkflow:
                 workflow.execute_child_workflow(
                     FieldExtractionWorkflow,
                     args=[field["id"], input_file],
-                    id=f"{workflow.info().workflow_id}-field-{field['id']}"
+                    id=f"{workflow.info().workflow_id}-field-{field['id']}",
+                    retry_policy=RetryPolicy(maximum_attempts=1),
+                    execution_timeout=timedelta(minutes=20)
                 )
             )
         

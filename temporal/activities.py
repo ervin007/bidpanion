@@ -28,6 +28,7 @@ class ExtractionActivities:
         self._bm25_docs = None
         self._vectorstore = None
         self._current_file = None
+        self._index_lock = asyncio.Lock()
 
     @activity.defn
     async def ingest_document(self, input_file: str) -> dict:
@@ -37,13 +38,18 @@ class ExtractionActivities:
 
     @activity.defn
     async def prepare_indices(self, input_file: str) -> bool:
-        logger.info(f"Preparing indices for: {input_file}")
-        documents = await asyncio.to_thread(load_and_chunk, input_file)
-        # Build and cache
-        self._bm25_index, self._bm25_docs = await asyncio.to_thread(build_bm25, documents)
-        self._vectorstore = await asyncio.to_thread(build_vectorstore, documents)
-        self._current_file = input_file
-        return True
+        async with self._index_lock:
+            if self._current_file == input_file and self._vectorstore is not None:
+                logger.info(f"Indices already prepared for {input_file}, skipping rebuild.")
+                return True
+                
+            logger.info(f"Preparing indices for: {input_file}")
+            documents = await asyncio.to_thread(load_and_chunk, input_file)
+            # Build and cache
+            self._bm25_index, self._bm25_docs = await asyncio.to_thread(build_bm25, documents)
+            self._vectorstore = await asyncio.to_thread(build_vectorstore, documents)
+            self._current_file = input_file
+            return True
 
     @activity.defn
     async def extract_field_activity(self, field_id: str, input_file: str) -> dict:
