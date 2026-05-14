@@ -9,4 +9,6 @@ rank-bm25>=0.2.2
 sentence-transformers>=2.7.0
 langfuse>=2.40.0
 temporalio>=1.6.0
-
+fastapi
+uvicorn
+python-multipart

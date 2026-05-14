@@ -1,71 +1,109 @@
-import http.server
-import socketserver
-import json
 import os
-from urllib.parse import unquote
+import json
+import uvicorn
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import PlainTextResponse
+from temporalio.client import Client
+from temporal.workflows import TenderExtractionWorkflow
 
-PORT = 8000
+app = FastAPI(title="Bidpanion Data API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 INPUT_DIR = "input"
 OUTPUT_DIR = "output"
+os.makedirs(INPUT_DIR, exist_ok=True)
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-class DataHandler(http.server.SimpleHTTPRequestHandler):
-    def end_headers(self):
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET')
-        self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
-        return super().end_headers()
+async def get_temporal_client():
+    temporal_url = os.getenv("TEMPORAL_URL", "localhost:7233")
+    return await Client.connect(temporal_url)
 
-    def do_GET(self):
-        if self.path == '/api/data':
-            # Returns the list of all available documents
-            docs = [f for f in os.listdir(INPUT_DIR) if f.endswith('.txt')]
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps({"documents": docs}).encode())
+@app.post("/api/process")
+async def process_tender(file: UploadFile = File(...)):
+    """Uploads a tender txt file and starts the Temporal extraction workflow."""
+    if not file.filename.endswith('.txt'):
+        raise HTTPException(status_code=400, detail="Only .txt files are supported")
+    
+    input_path = os.path.join(INPUT_DIR, file.filename)
+    content = await file.read()
+    with open(input_path, "wb") as f:
+        f.write(content)
+        
+    output_filename = os.path.splitext(file.filename)[0] + ".json"
+    output_path = os.path.join(OUTPUT_DIR, output_filename)
+    
+    try:
+        client = await get_temporal_client()
+        workflow_id = f"extract-{os.path.splitext(file.filename)[0].replace(' ', '_')}"
+        
+        handle = await client.start_workflow(
+            TenderExtractionWorkflow.run,
+            args=[input_path, output_path],
+            id=workflow_id,
+            task_queue="tender-extraction-queue",
+        )
+        return {
+            "message": "Processing started",
+            "workflow_id": handle.id,
+            "filename": file.filename
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to start workflow: {str(e)}")
+
+@app.get("/api/status/{workflow_id}")
+async def get_status(workflow_id: str):
+    """Gets the current status of the extraction workflow."""
+    try:
+        client = await get_temporal_client()
+        handle = client.get_workflow_handle(workflow_id)
+        description = await handle.describe()
+        status = description.status
+        return {"workflow_id": workflow_id, "status": str(status.name)}
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=f"Workflow not found or error: {str(e)}")
+
+@app.get("/api/data")
+async def list_documents():
+    """Lists all available uploaded documents."""
+    docs = [f for f in os.listdir(INPUT_DIR) if f.endswith('.txt')]
+    return {"documents": docs}
+
+@app.get("/api/file/{filename:path}", response_class=PlainTextResponse)
+async def get_file(filename: str):
+    """Retrieves the original txt file."""
+    filepath = os.path.join(INPUT_DIR, filename)
+    if os.path.exists(filepath):
+        with open(filepath, "r", encoding="utf-8") as f:
+            return f.read()
+    raise HTTPException(status_code=404, detail="File not found")
+
+@app.get("/api/results/{filename:path}")
+async def get_results(filename: str):
+    """Retrieves the extracted JSON results for a specific tender."""
+    json_filename = os.path.splitext(filename)[0] + ".json"
+    json_path = os.path.join(OUTPUT_DIR, json_filename)
+    
+    # Fallback if specific file isn't found (for backward compatibility)
+    if not os.path.exists(json_path):
+        json_path = os.path.join(OUTPUT_DIR, "result.json")
+
+    if os.path.exists(json_path):
+        try:
+            with open(json_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error reading results: {str(e)}")
             
-        elif self.path.startswith('/api/file/'):
-            filename = unquote(self.path.replace('/api/file/', ''))
-            filepath = os.path.join(INPUT_DIR, filename)
-            if os.path.exists(filepath):
-                self.send_response(200)
-                self.send_header('Content-type', 'text/plain; charset=utf-8')
-                self.end_headers()
-                with open(filepath, 'rb') as f:
-                    self.wfile.write(f.read())
-            else:
-                self.send_error(404, "File not found")
+    return {}
 
-        elif self.path.startswith('/api/results/'):
-            # New endpoint: Fetch results for a specific document
-            # Request: /api/results/tender_name.txt -> Looks for output/tender_name.json
-            filename = unquote(self.path.replace('/api/results/', ''))
-            json_filename = os.path.splitext(filename)[0] + ".json"
-            json_path = os.path.join(OUTPUT_DIR, json_filename)
-            
-            # Fallback to result.json if specific one doesn't exist yet
-            if not os.path.exists(json_path):
-                json_path = os.path.join(OUTPUT_DIR, "result.json")
-
-            if os.path.exists(json_path):
-                try:
-                    with open(json_path, 'r', encoding='utf-8') as f:
-                        data = json.load(f)
-                    self.send_response(200)
-                    self.send_header('Content-type', 'application/json')
-                    self.end_headers()
-                    self.wfile.write(json.dumps(data).encode())
-                except Exception as e:
-                    self.send_error(500, f"Error reading results: {str(e)}")
-            else:
-                # If no results at all, return empty object
-                self.send_response(200)
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
-                self.wfile.write(json.dumps({}).encode())
-        else:
-            super().do_GET()
-
-print(f"Data Server at port {PORT}")
-with socketserver.TCPServer(("", PORT), DataHandler) as httpd:
-    httpd.serve_forever()
+if __name__ == "__main__":
+    print("Starting FastAPI Data Server at port 8000...")
+    uvicorn.run(app, host="0.0.0.0", port=8000)

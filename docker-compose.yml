@@ -219,6 +219,10 @@ services:
   bidpanion-data-api:
     build: .
     restart: always
+    environment:
+      - TEMPORAL_URL=temporal:7233
+    env_file:
+      - .env
     ports:
       - 8100:8000
     volumes:
