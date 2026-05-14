@@ -213,7 +213,8 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/app
+      - shared_data_input:/app/input
+      - shared_data_output:/app/output
     command: python -m temporal.worker
 
   bidpanion-data-api:
@@ -226,7 +227,8 @@ services:
     ports:
       - 8100:8000
     volumes:
-      - .:/app
+      - shared_data_input:/app/input
+      - shared_data_output:/app/output
     command: python serve_data.py
 
   bidpanion-viewer:
@@ -250,5 +252,9 @@ volumes:
   langfuse_redis_data:
     driver: local
   temporal_postgres_data:
+    driver: local
+  shared_data_input:
+    driver: local
+  shared_data_output:
     driver: local
 
