@@ -202,7 +202,7 @@ services:
       - temporal_postgres_data:/var/lib/postgresql/data
 
   bidpanion-worker:
-    build: .
+    image: bidpanion-base-image
     restart: always
     depends_on:
       - temporal
@@ -218,6 +218,7 @@ services:
 
   bidpanion-data-api:
     build: .
+    image: bidpanion-base-image
     restart: always
     environment:
       - TEMPORAL_URL=temporal:7233
