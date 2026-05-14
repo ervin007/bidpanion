@@ -1,7 +1,7 @@
 import os
 import json
 import uvicorn
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 from temporalio.client import Client
@@ -27,7 +27,7 @@ async def get_temporal_client():
     return await Client.connect(temporal_url)
 
 @app.post("/api/process")
-async def process_tender(file: UploadFile = File(...)):
+async def process_tender(file: UploadFile = File(...), callback_url: str = Form(None)):
     """Uploads a tender txt file and starts the Temporal extraction workflow."""
     if not file.filename.endswith('.txt'):
         raise HTTPException(status_code=400, detail="Only .txt files are supported")
@@ -46,7 +46,7 @@ async def process_tender(file: UploadFile = File(...)):
         
         handle = await client.start_workflow(
             TenderExtractionWorkflow.run,
-            args=[input_path, output_path],
+            args=[input_path, output_path, callback_url],
             id=workflow_id,
             task_queue="tender-extraction-queue",
         )

@@ -23,46 +23,70 @@ class FieldExtractionWorkflow:
 @workflow.defn
 class TenderExtractionWorkflow:
     @workflow.run
-    async def run(self, input_file: str, output_file: str) -> dict:
-        # 1. Ingest and prepare indices
-        await workflow.execute_activity_method(
-            ExtractionActivities.prepare_indices,
-            args=[input_file],
-            start_to_close_timeout=timedelta(minutes=10),
-        )
-
-        # 2. Extract each field in batches to avoid overwhelming Vertex AI quota
-        # 2. Extract each field (Full Parallel)
-        import asyncio
-        extraction_futures = []
-        for field in FIELDS:
-            extraction_futures.append(
-                workflow.execute_child_workflow(
-                    FieldExtractionWorkflow,
-                    args=[field["id"], input_file],
-                    id=f"{workflow.info().workflow_id}-field-{field['id']}",
-                    retry_policy=RetryPolicy(maximum_attempts=1),
-                    execution_timeout=timedelta(minutes=20)
-                )
+    async def run(self, input_file: str, output_file: str, callback_url: str = None) -> dict:
+        try:
+            # 1. Ingest and prepare indices
+            await workflow.execute_activity_method(
+                ExtractionActivities.prepare_indices,
+                args=[input_file],
+                start_to_close_timeout=timedelta(minutes=10),
             )
-        
-        results = await asyncio.gather(*extraction_futures)
 
+            # 2. Extract each field in batches to avoid overwhelming Vertex AI quota
+            # 2. Extract each field (Full Parallel)
+            import asyncio
+            extraction_futures = []
+            for field in FIELDS:
+                extraction_futures.append(
+                    workflow.execute_child_workflow(
+                        FieldExtractionWorkflow,
+                        args=[field["id"], input_file],
+                        id=f"{workflow.info().workflow_id}-field-{field['id']}",
+                        retry_policy=RetryPolicy(maximum_attempts=1),
+                        execution_timeout=timedelta(minutes=20)
+                    )
+                )
+            
+            results = await asyncio.gather(*extraction_futures)
 
+            # 3. Finalize and save (using a helper to structure the JSON)
+            # Note: aggregation logic could also be done here in the workflow 
+            # but file writing must be an activity.
+            
+            # Build the structured output (logic from main.py)
+            # For simplicity in this example, let's assume we have a SaveActivity
+            # that handles the final formatting and writing.
+            
+            await workflow.execute_activity_method(
+                ExtractionActivities.save_final_results,
+                args=[results, output_file],
+                start_to_close_timeout=timedelta(minutes=2),
+            )
 
+            if callback_url:
+                await workflow.execute_activity_method(
+                    ExtractionActivities.send_completion_webhook_activity,
+                    args=[callback_url, workflow.info().workflow_id, input_file, "completed", output_file],
+                    start_to_close_timeout=timedelta(minutes=5),
+                    retry_policy=RetryPolicy(
+                        maximum_attempts=10, 
+                        initial_interval=timedelta(seconds=5), 
+                        backoff_coefficient=2.0
+                    )
+                )
 
-        # 3. Finalize and save (using a helper to structure the JSON)
-        # Note: aggregation logic could also be done here in the workflow 
-        # but file writing must be an activity.
-        
-        # Build the structured output (logic from main.py)
-        # For simplicity in this example, let's assume we have a SaveActivity
-        # that handles the final formatting and writing.
-        
-        await workflow.execute_activity_method(
-            ExtractionActivities.save_final_results,
-            args=[results, output_file],
-            start_to_close_timeout=timedelta(minutes=2),
-        )
+            return {"status": "completed", "output": output_file}
 
-        return {"status": "completed", "output": output_file}
+        except Exception as e:
+            if callback_url:
+                await workflow.execute_activity_method(
+                    ExtractionActivities.send_completion_webhook_activity,
+                    args=[callback_url, workflow.info().workflow_id, input_file, "failed", None],
+                    start_to_close_timeout=timedelta(minutes=5),
+                    retry_policy=RetryPolicy(
+                        maximum_attempts=10, 
+                        initial_interval=timedelta(seconds=5), 
+                        backoff_coefficient=2.0
+                    )
+                )
+            raise e

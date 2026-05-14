@@ -2,6 +2,7 @@ import os
 import json
 import logging
 import asyncio
+import httpx
 from temporalio import activity
 
 from ingestion.chunker import load_and_chunk
@@ -175,4 +176,25 @@ class ExtractionActivities:
             json.dump(final_output, f, ensure_ascii=False, indent=2)
             
         return output_file
+
+    @activity.defn
+    async def send_completion_webhook_activity(self, callback_url: str, workflow_id: str, filename: str, status: str, output_file: str = None) -> bool:
+        if not callback_url:
+            return True
+            
+        payload = {
+            "status": status,
+            "workflow_id": workflow_id,
+            "filename": filename
+        }
+        
+        if output_file and os.path.exists(output_file):
+            with open(output_file, 'r', encoding='utf-8') as f:
+                payload["result"] = json.load(f)
+                
+        logger.info(f"Sending completion webhook to {callback_url}")
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.post(callback_url, json=payload)
+            response.raise_for_status()
+        return True
 
