@@ -23,6 +23,7 @@ async def main():
             activities.extract_field_activity,
             activities.save_final_results,
             activities.ingest_document,
+            activities.send_completion_webhook_activity,
         ],
     )
 
