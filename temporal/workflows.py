@@ -25,22 +25,28 @@ class TenderExtractionWorkflow:
     @workflow.run
     async def run(self, input_file: str, output_file: str, callback_url: str = None) -> dict:
         try:
-            # 1. Ingest and prepare indices
+            # 1. Unzip and parse tender zip
+            parsed_txt_file = await workflow.execute_activity_method(
+                ExtractionActivities.parse_zip_file_activity,
+                args=[input_file],
+                start_to_close_timeout=timedelta(minutes=15),
+            )
+
+            # 2. Ingest and prepare indices
             await workflow.execute_activity_method(
                 ExtractionActivities.prepare_indices,
-                args=[input_file],
+                args=[parsed_txt_file],
                 start_to_close_timeout=timedelta(minutes=10),
             )
 
-            # 2. Extract each field in batches to avoid overwhelming Vertex AI quota
-            # 2. Extract each field (Full Parallel)
+            # 3. Extract each field (Full Parallel)
             import asyncio
             extraction_futures = []
             for field in FIELDS:
                 extraction_futures.append(
                     workflow.execute_child_workflow(
                         FieldExtractionWorkflow,
-                        args=[field["id"], input_file],
+                        args=[field["id"], parsed_txt_file],
                         id=f"{workflow.info().workflow_id}-field-{field['id']}",
                         retry_policy=RetryPolicy(maximum_attempts=1),
                         execution_timeout=timedelta(minutes=20)

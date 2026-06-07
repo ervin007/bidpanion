@@ -198,3 +198,27 @@ class ExtractionActivities:
             response.raise_for_status()
         return True
 
+    @activity.defn
+    async def parse_zip_file_activity(self, zip_path: str) -> str:
+        logger.info(f"Parsing zip file: {zip_path}")
+        import tempfile
+        import shutil
+        from parsing_module import parse_tender_files, extract_zip
+        
+        temp_dir = tempfile.mkdtemp()
+        try:
+            # Extract the uploaded zip file to our temp directory
+            success = await asyncio.to_thread(extract_zip, zip_path, temp_dir)
+            if not success:
+                raise ValueError(f"Failed to extract zip file: {zip_path}")
+            
+            # Now run parse_tender_files from parsing_module to generate the merged .txt file
+            input_dir = os.path.dirname(zip_path) # e.g. "input"
+            merged_txt_path = await asyncio.to_thread(parse_tender_files, temp_dir, input_dir)
+            
+            logger.info(f"Successfully parsed zip to merged text file: {merged_txt_path}")
+            return merged_txt_path
+        finally:
+            shutil.rmtree(temp_dir, ignore_errors=True)
+
+

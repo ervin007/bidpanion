@@ -24,6 +24,7 @@ async def main():
             activities.save_final_results,
             activities.ingest_document,
             activities.send_completion_webhook_activity,
+            activities.parse_zip_file_activity,
         ],
     )
 

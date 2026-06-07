@@ -12,3 +12,9 @@ temporalio>=1.6.0
 fastapi
 uvicorn
 python-multipart
+PyMuPDF
+pdfplumber
+pytesseract
+python-docx
+openpyxl
+striprtf

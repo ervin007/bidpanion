@@ -28,9 +28,9 @@ async def get_temporal_client():
 
 @app.post("/api/process")
 async def process_tender(file: UploadFile = File(...), callback_url: str = Form(None)):
-    """Uploads a tender txt file and starts the Temporal extraction workflow."""
-    if not file.filename.endswith('.txt'):
-        raise HTTPException(status_code=400, detail="Only .txt files are supported")
+    """Uploads a tender zip file and starts the Temporal extraction workflow."""
+    if not file.filename.endswith('.zip'):
+        raise HTTPException(status_code=400, detail="Only .zip files are supported")
     
     input_path = os.path.join(INPUT_DIR, file.filename)
     content = await file.read()
