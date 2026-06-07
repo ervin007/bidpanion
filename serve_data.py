@@ -1,7 +1,7 @@
 import os
 import json
 import uvicorn
-from fastapi import FastAPI, UploadFile, File, HTTPException, Form
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 from temporalio.client import Client
@@ -27,8 +27,11 @@ async def get_temporal_client():
     return await Client.connect(temporal_url)
 
 @app.post("/api/process")
-async def process_tender(file: UploadFile = File(...), callback_url: str = Form(None), company_profile: str = Form(None)):
+async def process_tender(request: Request, file: UploadFile = File(...), callback_url: str = Form(None), company_profile: str = Form(None)):
     """Uploads a tender zip file and starts the Temporal extraction workflow."""
+    form_data = await request.form()
+    print(f"DEBUG: All Form keys received: {list(form_data.keys())}")
+    print(f"DEBUG: Received company_profile raw: {form_data.get('company_profile')}")
     if not file.filename.endswith('.zip'):
         raise HTTPException(status_code=400, detail="Only .zip files are supported")
     
@@ -39,9 +42,6 @@ async def process_tender(file: UploadFile = File(...), callback_url: str = Form(
         
     output_filename = os.path.splitext(file.filename)[0] + ".json"
     output_path = os.path.join(OUTPUT_DIR, output_filename)
-    
-    print(f"DEBUG: Received company_profile in API: {company_profile}")
-    
     try:
         client = await get_temporal_client()
         workflow_id = f"extract-{os.path.splitext(file.filename)[0].replace(' ', '_')}"
