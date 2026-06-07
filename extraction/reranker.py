@@ -97,13 +97,10 @@ Beispiel: [12, 4, 0, 45, 8]"""
                 preview_length = max(200, int(preview_length * 0.7))
                 print(f"\n[Rate Limit] Reranker hit API limits. Waiting {wait_time:.1f}s and reducing load (docs: {current_max_docs}, preview: {preview_length})...")
                 time.sleep(wait_time)
-            elif any(x in err_msg for x in ["400", "context limit", "too many tokens", "exceeds the maximum"]):
+            else:
                 current_max_docs = max(5, int(current_max_docs * 0.5))
                 preview_length = max(200, int(preview_length * 0.5))
-                print(f"\n[Context Limit] Reducing reranker input to {current_max_docs} docs and {preview_length} chars...")
-            else:
-                print(f"LLM Reranking failed: {e}. Falling back to original RRF order.")
-                return docs[:top_k]
+                print(f"\n[Reranker Error] {e}. Reducing input to {current_max_docs} docs and {preview_length} chars, retrying (Attempt {attempt + 1}/{max_retries})...")
                 
     print(f"\nReranking permanently failed after {max_retries} retries. Falling back to original RRF order.")
     return docs[:top_k]

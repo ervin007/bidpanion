@@ -61,7 +61,14 @@ WICHTIG: Sei so detailliert wie möglich. Wenn du die Information nicht findest,
                 "query": field_cfg["queries"][0], # Use primary query for extraction instructions
                 "instruction": field_cfg["instruction"]
             }, config={"callbacks": callbacks or [], "tags": tags or []})
-            return result.dict()
+            res_dict = result.dict()
+            if res_dict.get("value") is None:
+                if len(current_chunks) > 5:
+                    new_len = int(len(current_chunks) * 0.7)
+                    print(f"\n[Extraction Null] Value was null for {field_cfg['id']}. Reducing context from {len(current_chunks)} to {new_len} chunks and retrying... (Attempt {attempt + 1}/{max_retries})")
+                    current_chunks = current_chunks[:new_len]
+                    continue
+            return res_dict
         except Exception as e:
             err_msg = str(e).lower()
             if any(x in err_msg for x in ["429", "resource exhausted", "quota"]):
@@ -69,17 +76,14 @@ WICHTIG: Sei so detailliert wie möglich. Wenn du die Information nicht findest,
                 wait_time = 5 + random.uniform(1, 5) # Add jitter
                 print(f"\n[Rate Limit] Hit API limits for {field_cfg['id']}. Retrying in {wait_time:.1f}s... (Attempt {attempt + 1}/{max_retries})")
                 time.sleep(wait_time)
-            elif any(x in err_msg for x in ["400", "context limit", "too many tokens", "exceeds the maximum"]):
+            else:
                 if len(current_chunks) > 5:
                     new_len = int(len(current_chunks) * 0.7)
-                    print(f"\n[Context Limit] Reducing context from {len(current_chunks)} to {new_len} chunks for {field_cfg['id']} and retrying...")
+                    print(f"\n[Extraction Error] {e} for {field_cfg['id']}. Reducing context from {len(current_chunks)} to {new_len} chunks and retrying... (Attempt {attempt + 1}/{max_retries})")
                     current_chunks = current_chunks[:new_len]
                 else:
-                    print(f"\n[Context Limit] Cannot reduce context further for {field_cfg['id']}.")
-                    break
-            else:
-                print(f"\nExtraction API failed for field {field_cfg['id']}: {e}")
-                return {"value": None, "chunk_index": None, "status": "retrieval_gap"}
+                    print(f"\nExtraction API permanently failed for field {field_cfg['id']}: {e}")
+                    return {"value": None, "chunk_index": None, "status": "retrieval_gap"}
                 
     print(f"\nExtraction permanently failed for field {field_cfg['id']} after {max_retries} retries.")
     return {"value": None, "chunk_index": None, "status": "retrieval_gap"}
