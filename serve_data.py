@@ -106,6 +106,8 @@ async def get_results(filename: str):
             
     return {}
 
+from pydantic import BaseModel
+
 class FitScoreWorkflowRequest(BaseModel):
     summary_payload: dict
     company_profile: str
