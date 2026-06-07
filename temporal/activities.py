@@ -178,7 +178,7 @@ class ExtractionActivities:
         return output_file
 
     @activity.defn
-    async def send_completion_webhook_activity(self, callback_url: str, workflow_id: str, filename: str, status: str, output_file: str = None) -> bool:
+    async def send_completion_webhook_activity(self, callback_url: str, workflow_id: str, filename: str, status: str, output_file: str = None, fit_results: dict = None) -> bool:
         if not callback_url:
             return True
             
@@ -191,6 +191,11 @@ class ExtractionActivities:
         if output_file and os.path.exists(output_file):
             with open(output_file, 'r', encoding='utf-8') as f:
                 payload["result"] = json.load(f)
+
+        if fit_results:
+            payload["fitScore"] = fit_results.get("fitScore")
+            payload["recommendation"] = fit_results.get("recommendation")
+            payload["fitCategories"] = fit_results.get("fitCategories")
                 
         logger.info(f"Sending completion webhook to {callback_url}")
         async with httpx.AsyncClient(timeout=30.0) as client:
@@ -220,5 +225,102 @@ class ExtractionActivities:
             return merged_txt_path
         finally:
             shutil.rmtree(temp_dir, ignore_errors=True)
+
+    @activity.defn
+    async def calculate_fit_score(self, results: list, company_profile: str) -> dict:
+        logger.info("Calculating fit score against company profile")
+        if not company_profile:
+            return {
+                "fitScore": None,
+                "recommendation": None,
+                "fitCategories": []
+            }
+            
+        try:
+            # 1. Format the extraction results
+            requirements = ""
+            for item in results:
+                field_id = item["field_id"]
+                val = item["result"].get("value")
+                if val:
+                    requirements += f"- {field_id}: {val}\n"
+                    
+            # 2. Format the company profile
+            profile_summary = ""
+            try:
+                profile_json = json.loads(company_profile)
+                sections = profile_json.get("sections", [])
+                for section in sections:
+                    label = section.get("label", "")
+                    data = section.get("data", {})
+                    profile_summary += f"### {label}\n"
+                    for k, v in data.items():
+                        profile_summary += f"- {k}: {v}\n"
+            except Exception as pe:
+                logger.error(f"Error parsing company profile: {pe}")
+                profile_summary = company_profile # fallback to raw text/json
+                
+            # 3. Call Vertex AI
+            from extraction.extractor import get_llm
+            from pydantic import BaseModel, Field
+            from typing import List, Literal
+            
+            class FitCategoryEvaluation(BaseModel):
+                slug: str = Field(description="Unique key of the category, matching company profile section slugs (e.g. services, industries, geography, certifications, capacity, etc.)")
+                label: str = Field(description="Display label of the category")
+                weight: int = Field(description="Percentage weight in overall score")
+                score: int = Field(description="Evaluated score out of 100")
+                status: Literal["MATCHED", "PARTIAL", "UNMATCHED", "NA"] = Field(description="Match status")
+                details: str = Field(description="Explanation of evaluated score")
+                matchedItems: List[str] = Field(description="List of matched features")
+                unmatchedItems: List[str] = Field(description="List of missing requirements")
+
+            class FitScoreEvaluation(BaseModel):
+                fitScore: int = Field(description="Overall Fit Score between 0 and 100")
+                recommendation: Literal["BID", "REVIEW", "NO_BID"] = Field(description="Match quality recommendation")
+                fitCategories: List[FitCategoryEvaluation] = Field(description="Evaluated category breakdown. Sum of category weights must equal 100.")
+                
+            llm = get_llm()
+            structured_llm = llm.with_structured_output(FitScoreEvaluation)
+            
+            from langchain_core.prompts import ChatPromptTemplate
+            prompt = ChatPromptTemplate.from_messages([
+                ("system", """Du bist ein Experte für die Bewertung von Ausschreibungen (Go/No-Go-Entscheidungen).
+Deine Aufgabe ist es, die Anforderungen einer Ausschreibung mit dem Firmenprofil (Company Profile) abzugleichen.
+Berechne einen Gesamt-Fit-Score (0 bis 100) und gib eine Empfehlung ("BID", "REVIEW", oder "NO_BID") ab.
+Teile die Bewertung in sinnvolle Kategorien auf, die auf den Abschnitten des Firmenprofils basieren (z. B. services, industries, geography, certifications, capacity, etc.).
+Verteile die Gewichte (weights) so, dass sie in Summe genau 100 ergeben.
+Antworte auf Deutsch für details, matchedItems und unmatchedItems."""),
+                ("human", """Hier sind die Anforderungen aus der Ausschreibung:
+----------
+{requirements}
+----------
+
+Hier ist das Firmenprofil (Company Profile):
+----------
+{company_profile}
+----------
+
+Führe den Abgleich durch und gib das Ergebnis strukturiert zurück.""")
+            ])
+            
+            chain = prompt | structured_llm
+            eval_result = await asyncio.to_thread(
+                chain.invoke,
+                {
+                    "requirements": requirements,
+                    "company_profile": profile_summary
+                }
+            )
+            
+            return eval_result.dict()
+        except Exception as e:
+            logger.error(f"Error calculating fit score: {e}")
+            # Ensure we do not fail the workflow if fit score calculation crashes
+            return {
+                "fitScore": None,
+                "recommendation": None,
+                "fitCategories": []
+            }
 
 

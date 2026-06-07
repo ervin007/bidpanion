@@ -23,7 +23,7 @@ class FieldExtractionWorkflow:
 @workflow.defn
 class TenderExtractionWorkflow:
     @workflow.run
-    async def run(self, input_file: str, output_file: str, callback_url: str = None) -> dict:
+    async def run(self, input_file: str, output_file: str, callback_url: str = None, company_profile: str = None) -> dict:
         try:
             # 1. Unzip and parse tender zip
             parsed_txt_file = await workflow.execute_activity_method(
@@ -55,24 +55,26 @@ class TenderExtractionWorkflow:
             
             results = await asyncio.gather(*extraction_futures)
 
-            # 3. Finalize and save (using a helper to structure the JSON)
-            # Note: aggregation logic could also be done here in the workflow 
-            # but file writing must be an activity.
-            
-            # Build the structured output (logic from main.py)
-            # For simplicity in this example, let's assume we have a SaveActivity
-            # that handles the final formatting and writing.
-            
+            # 4. Finalize and save
             await workflow.execute_activity_method(
                 ExtractionActivities.save_final_results,
                 args=[results, output_file],
                 start_to_close_timeout=timedelta(minutes=2),
             )
 
+            # 5. Calculate Fit Score if company profile is provided
+            fit_results = None
+            if company_profile:
+                fit_results = await workflow.execute_activity_method(
+                    ExtractionActivities.calculate_fit_score,
+                    args=[results, company_profile],
+                    start_to_close_timeout=timedelta(minutes=10),
+                )
+
             if callback_url:
                 await workflow.execute_activity_method(
                     ExtractionActivities.send_completion_webhook_activity,
-                    args=[callback_url, workflow.info().workflow_id, input_file, "completed", output_file],
+                    args=[callback_url, workflow.info().workflow_id, input_file, "completed", output_file, fit_results],
                     start_to_close_timeout=timedelta(minutes=5),
                     retry_policy=RetryPolicy(
                         maximum_attempts=10, 
@@ -87,7 +89,7 @@ class TenderExtractionWorkflow:
             if callback_url:
                 await workflow.execute_activity_method(
                     ExtractionActivities.send_completion_webhook_activity,
-                    args=[callback_url, workflow.info().workflow_id, input_file, "failed", None],
+                    args=[callback_url, workflow.info().workflow_id, input_file, "failed", None, None],
                     start_to_close_timeout=timedelta(minutes=5),
                     retry_policy=RetryPolicy(
                         maximum_attempts=10, 

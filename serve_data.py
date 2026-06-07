@@ -27,7 +27,7 @@ async def get_temporal_client():
     return await Client.connect(temporal_url)
 
 @app.post("/api/process")
-async def process_tender(file: UploadFile = File(...), callback_url: str = Form(None)):
+async def process_tender(file: UploadFile = File(...), callback_url: str = Form(None), company_profile: str = Form(None)):
     """Uploads a tender zip file and starts the Temporal extraction workflow."""
     if not file.filename.endswith('.zip'):
         raise HTTPException(status_code=400, detail="Only .zip files are supported")
@@ -40,13 +40,15 @@ async def process_tender(file: UploadFile = File(...), callback_url: str = Form(
     output_filename = os.path.splitext(file.filename)[0] + ".json"
     output_path = os.path.join(OUTPUT_DIR, output_filename)
     
+    print(f"DEBUG: Received company_profile in API: {company_profile}")
+    
     try:
         client = await get_temporal_client()
         workflow_id = f"extract-{os.path.splitext(file.filename)[0].replace(' ', '_')}"
         
         handle = await client.start_workflow(
             TenderExtractionWorkflow.run,
-            args=[input_path, output_path, callback_url],
+            args=[input_path, output_path, callback_url, company_profile],
             id=workflow_id,
             task_queue="tender-extraction-queue",
         )

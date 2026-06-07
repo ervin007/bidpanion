@@ -25,6 +25,7 @@ async def main():
             activities.ingest_document,
             activities.send_completion_webhook_activity,
             activities.parse_zip_file_activity,
+            activities.calculate_fit_score,
         ],
     )
 
