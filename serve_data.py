@@ -5,7 +5,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 from temporalio.client import Client
-from temporal.workflows import TenderExtractionWorkflow
+from temporal.workflows import TenderExtractionWorkflow, TenderFitScoreWorkflow
 
 app = FastAPI(title="Bidpanion Data API")
 
@@ -106,85 +106,29 @@ async def get_results(filename: str):
             
     return {}
 
-from pydantic import BaseModel
-
-class FitScoreRequest(BaseModel):
-    requirements: dict
+class FitScoreWorkflowRequest(BaseModel):
+    summary_payload: dict
     company_profile: str
+    callback_url: str
+    workflow_id: str
 
 @app.post("/api/calculate-fit-score")
-async def api_calculate_fit_score(req: FitScoreRequest):
-    """Calculates the fit score for a set of requirements and a company profile."""
-    req_str = ""
-    for k, v in req.requirements.items():
-        if v:
-            req_str += f"- {k}: {v}\n"
-            
-    profile_summary = ""
+async def api_calculate_fit_score(req: FitScoreWorkflowRequest):
+    """Starts the Temporal workflow to calculate fit score and send callback."""
     try:
-        profile_json = json.loads(req.company_profile)
-        sections = profile_json.get("sections", [])
-        for section in sections:
-            label = section.get("label", "")
-            data = section.get("data", {})
-            profile_summary += f"### {label}\n"
-            for pk, pv in data.items():
-                profile_summary += f"- {pk}: {pv}\n"
-    except Exception as pe:
-        profile_summary = req.company_profile
-
-    from extraction.extractor import get_llm
-    from pydantic import BaseModel as PydanticBaseModel, Field as PydanticField
-    from typing import List, Literal
-    from langchain_core.prompts import ChatPromptTemplate
-
-    class FitCategoryEvaluation(PydanticBaseModel):
-        slug: str
-        label: str
-        weight: int
-        score: int
-        status: Literal["MATCHED", "PARTIAL", "UNMATCHED", "NA"]
-        details: str
-        matchedItems: List[str]
-        unmatchedItems: List[str]
-
-    class FitScoreEvaluation(PydanticBaseModel):
-        fitScore: int
-        recommendation: Literal["BID", "REVIEW", "NO_BID"]
-        fitCategories: List[FitCategoryEvaluation]
-
-    try:
-        llm = get_llm()
-        structured_llm = llm.with_structured_output(FitScoreEvaluation)
-
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", """Du bist ein Experte für die Bewertung von Ausschreibungen (Go/No-Go-Entscheidungen).
-Deine Aufgabe ist es, die Anforderungen einer Ausschreibung mit dem Firmenprofil (Company Profile) abzugleichen.
-Berechne einen Gesamt-Fit-Score (0 bis 100) und gib eine Empfehlung ("BID", "REVIEW", oder "NO_BID") ab.
-Teile die Bewertung in sinnvolle Kategorien auf, die auf den Abschnitten des Firmenprofils basieren (z. B. services, industries, geography, certifications, capacity, etc.).
-Verteile die Gewichte (weights) so, dass sie in Summe genau 100 ergeben.
-Antworte auf Deutsch für details, matchedItems und unmatchedItems."""),
-            ("human", """Hier sind die Anforderungen aus der Ausschreibung:
-----------
-{requirements}
-----------
-
-Hier ist das Firmenprofil (Company Profile):
-----------
-{profile}
-----------
-
-Berechne den Fit Score.""")
-        ])
-
-        chain = prompt | structured_llm
-        eval_result = chain.invoke({
-            "requirements": req_str,
-            "profile": profile_summary
-        })
-        return eval_result.dict()
+        client = await get_temporal_client()
+        handle = await client.start_workflow(
+            TenderFitScoreWorkflow.run,
+            args=[req.summary_payload, req.company_profile, req.callback_url],
+            id=req.workflow_id,
+            task_queue="tender-extraction-queue",
+        )
+        return {
+            "message": "Fit score workflow started",
+            "workflow_id": handle.id
+        }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to start workflow: {str(e)}")
 
 if __name__ == "__main__":
     print("Starting FastAPI Data Server at port 8000...")

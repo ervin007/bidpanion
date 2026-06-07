@@ -98,3 +98,43 @@ class TenderExtractionWorkflow:
                     )
                 )
             raise e
+
+@workflow.defn
+class TenderFitScoreWorkflow:
+    @workflow.run
+    async def run(self, summary_payload: dict, company_profile: str, callback_url: str) -> dict:
+        try:
+            # 1. Calculate Fit Score directly from the summary payload
+            fit_results = await workflow.execute_activity_method(
+                ExtractionActivities.calculate_fit_score_from_summary,
+                args=[summary_payload, company_profile],
+                start_to_close_timeout=timedelta(minutes=10),
+            )
+
+            # 2. Send Callback with result_payload
+            if callback_url:
+                await workflow.execute_activity_method(
+                    ExtractionActivities.send_completion_webhook_activity,
+                    args=[callback_url, workflow.info().workflow_id, "recalculated.zip", "completed", None, fit_results, summary_payload],
+                    start_to_close_timeout=timedelta(minutes=5),
+                    retry_policy=RetryPolicy(
+                        maximum_attempts=10, 
+                        initial_interval=timedelta(seconds=5), 
+                        backoff_coefficient=2.0
+                    )
+                )
+            return {"status": "completed"}
+
+        except Exception as e:
+            if callback_url:
+                await workflow.execute_activity_method(
+                    ExtractionActivities.send_completion_webhook_activity,
+                    args=[callback_url, workflow.info().workflow_id, "recalculated.zip", "failed", None, None],
+                    start_to_close_timeout=timedelta(minutes=5),
+                    retry_policy=RetryPolicy(
+                        maximum_attempts=10, 
+                        initial_interval=timedelta(seconds=5), 
+                        backoff_coefficient=2.0
+                    )
+                )
+            raise e

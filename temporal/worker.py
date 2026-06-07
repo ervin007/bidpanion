@@ -3,7 +3,7 @@ import os
 from temporalio.client import Client
 from temporalio.worker import Worker
 from temporal.activities import ExtractionActivities
-from temporal.workflows import TenderExtractionWorkflow, FieldExtractionWorkflow
+from temporal.workflows import TenderExtractionWorkflow, FieldExtractionWorkflow, TenderFitScoreWorkflow
 
 async def main():
     # Connect to Temporal server
@@ -17,7 +17,7 @@ async def main():
     worker = Worker(
         client,
         task_queue="tender-extraction-queue",
-        workflows=[TenderExtractionWorkflow, FieldExtractionWorkflow],
+        workflows=[TenderExtractionWorkflow, FieldExtractionWorkflow, TenderFitScoreWorkflow],
         activities=[
             activities.prepare_indices,
             activities.extract_field_activity,
@@ -26,6 +26,7 @@ async def main():
             activities.send_completion_webhook_activity,
             activities.parse_zip_file_activity,
             activities.calculate_fit_score,
+            activities.calculate_fit_score_from_summary,
         ],
     )
 

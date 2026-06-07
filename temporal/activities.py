@@ -178,7 +178,7 @@ class ExtractionActivities:
         return output_file
 
     @activity.defn
-    async def send_completion_webhook_activity(self, callback_url: str, workflow_id: str, filename: str, status: str, output_file: str = None, fit_results: dict = None) -> bool:
+    async def send_completion_webhook_activity(self, callback_url: str, workflow_id: str, filename: str, status: str, output_file: str = None, fit_results: dict = None, result_payload: dict = None) -> bool:
         if not callback_url:
             return True
             
@@ -188,7 +188,9 @@ class ExtractionActivities:
             "filename": filename
         }
         
-        if output_file and os.path.exists(output_file):
+        if result_payload:
+            payload["result"] = result_payload
+        elif output_file and os.path.exists(output_file):
             with open(output_file, 'r', encoding='utf-8') as f:
                 payload["result"] = json.load(f)
 
@@ -202,6 +204,106 @@ class ExtractionActivities:
             response = await client.post(callback_url, json=payload)
             response.raise_for_status()
         return True
+
+    @activity.defn
+    async def calculate_fit_score_from_summary(self, summary_payload: dict, company_profile: str) -> dict:
+        logger.info("Calculating fit score against company profile from summary payload")
+        if not company_profile:
+            return {
+                "fitScore": None,
+                "recommendation": None,
+                "fitCategories": []
+            }
+
+        try:
+            # 1. Format the requirements recursively
+            requirements = ""
+            def recurse(d, prefix=""):
+                nonlocal requirements
+                if isinstance(d, dict):
+                    for k, v in d.items():
+                        if k == "citations":
+                            continue
+                        recurse(v, f"{prefix} -> {k}" if prefix else k)
+                elif isinstance(d, list):
+                    requirements += f"- {prefix}: {', '.join(map(str, d))}\n"
+                elif d is not None:
+                    requirements += f"- {prefix}: {d}\n"
+            recurse(summary_payload)
+
+            # 2. Format the company profile
+            profile_summary = ""
+            try:
+                profile_json = json.loads(company_profile)
+                sections = profile_json.get("sections", [])
+                for section in sections:
+                    label = section.get("label", "")
+                    data = section.get("data", {})
+                    profile_summary += f"### {label}\n"
+                    for k, v in data.items():
+                        profile_summary += f"- {k}: {v}\n"
+            except Exception as pe:
+                logger.error(f"Error parsing company profile: {pe}")
+                profile_summary = company_profile
+
+            # 3. Call Vertex AI
+            from extraction.extractor import get_llm
+            from pydantic import BaseModel, Field
+            from typing import List, Literal
+            
+            class FitCategoryEvaluation(BaseModel):
+                slug: str = Field(description="Unique key of the category, matching company profile section slugs (e.g. services, industries, geography, certifications, capacity, etc.)")
+                label: str = Field(description="Display label of the category")
+                weight: int = Field(description="Percentage weight in overall score")
+                score: int = Field(description="Evaluated score out of 100")
+                status: Literal["MATCHED", "PARTIAL", "UNMATCHED", "NA"] = Field(description="Match status")
+                details: str = Field(description="Explanation of evaluated score")
+                matchedItems: List[str] = Field(description="List of matched features")
+                unmatchedItems: List[str] = Field(description="List of missing requirements")
+
+            class FitScoreEvaluation(BaseModel):
+                fitScore: int = Field(description="Overall Fit Score between 0 and 100")
+                recommendation: Literal["BID", "REVIEW", "NO_BID"] = Field(description="Match quality recommendation")
+                fitCategories: List[FitCategoryEvaluation] = Field(description="Evaluated category breakdown. Sum of category weights must equal 100.")
+                
+            llm = get_llm()
+            structured_llm = llm.with_structured_output(FitScoreEvaluation)
+            
+            from langchain_core.prompts import ChatPromptTemplate
+            prompt = ChatPromptTemplate.from_messages([
+                ("system", """Du bist ein Experte für die Bewertung von Ausschreibungen (Go/No-Go-Entscheidungen).
+Deine Aufgabe ist es, die Anforderungen einer Ausschreibung mit dem Firmenprofil (Company Profile) abzugleichen.
+Berechne einen Gesamt-Fit-Score (0 bis 100) und gib eine Empfehlung ("BID", "REVIEW", oder "NO_BID") ab.
+Teile die Bewertung in sinnvolle Kategorien auf, die auf den Abschnitten des Firmenprofils basieren (z. B. services, industries, geography, certifications, capacity, etc.).
+Verteile die Gewichte (weights) so, dass sie in Summe genau 100 ergeben.
+Antworte auf Deutsch für details, matchedItems und unmatchedItems."""),
+                ("human", """Hier sind die Anforderungen aus der Ausschreibung:
+----------
+{requirements}
+----------
+
+Hier ist das Firmenprofil (Company Profile):
+----------
+{profile}
+----------
+
+Berechne den Fit Score.""")
+            ])
+
+            chain = prompt | structured_llm
+            eval_result = chain.invoke({
+                "requirements": requirements,
+                "profile": profile_summary
+            })
+            
+            try:
+                return eval_result.model_dump()
+            except AttributeError:
+                return eval_result.dict()
+
+        except Exception as e:
+            logger.error(f"Error calculating fit score from summary: {e}")
+            raise e
 
     @activity.defn
     async def parse_zip_file_activity(self, zip_path: str) -> str:
